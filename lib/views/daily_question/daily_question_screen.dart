@@ -14,7 +14,6 @@ import '../../widgets/error_widget.dart';
 import '../../widgets/register_dialog.dart';
 import '../../widgets/voting_stats_widget.dart';
 import '../../data/services/sound_service.dart';
-import '../leaderboard/leaderboard_screen.dart';
 import '../about/about_screen.dart';
 import 'comments_screen.dart';
 

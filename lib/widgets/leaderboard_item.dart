@@ -41,7 +41,7 @@ class LeaderboardItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final rankColor = _getRankColor();
-    final hasSpecialRank = item.rank <= 3;
+    final hasSpecialRank = (item.rank ?? 999) <= 3;
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
-import '../data/models/question_model.dart';
 import '../data/models/cached_question_model.dart';
 import '../data/repositories/question_repository.dart';
 import '../data/services/network_service.dart';

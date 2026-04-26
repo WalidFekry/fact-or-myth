@@ -10,7 +10,6 @@ import '../../widgets/skeleton_loading.dart';
 import '../../widgets/error_widget.dart';
 import '../../widgets/custom_app_bar.dart';
 import '../../data/services/sound_service.dart';
-import '../../data/models/question_model.dart';
 
 class FreeQuestionsScreen extends StatelessWidget {
   const FreeQuestionsScreen({super.key});
