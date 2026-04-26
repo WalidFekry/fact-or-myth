@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:share_plus/share_plus.dart';
-import '../../core/theme/app_colors.dart';
+
 import '../../core/constants/assets.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/utils/share_utils.dart';
 import '../../widgets/custom_app_bar.dart';
 
 class AboutScreen extends StatelessWidget {
@@ -12,7 +15,7 @@ class AboutScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomAppBar(
-        title: 'الإعدادات والمعلومات',
+        title: 'عن التطبيق',
         showBack: true,
       ),
       body: SingleChildScrollView(
@@ -20,31 +23,31 @@ class AboutScreen extends StatelessWidget {
           children: [
             // About App Section
             _buildAboutSection(context),
-            
-            const SizedBox(height: 8),
-            
+
+            const SizedBox(height: 2),
+
             // Social Links Section
-            _buildSectionHeader(context, 'تواصل معنا'),
+            _buildSectionHeader(context, 'شارك معنا'),
             _buildSocialLinks(context),
-            
-            const SizedBox(height: 8),
-            
+
+            const SizedBox(height: 2),
+
             // Contact & Suggestions Section
             _buildSectionHeader(context, 'الدعم والاقتراحات'),
             _buildContactSection(context),
-            
-            const SizedBox(height: 8),
-            
-            // More Apps Section
-            _buildSectionHeader(context, 'تطبيقات أخرى'),
-            _buildMoreAppsSection(context),
-            
-            const SizedBox(height: 8),
-            
+
+            const SizedBox(height: 2),
+
             // Privacy Policy
             _buildSectionHeader(context, 'الخصوصية'),
             _buildPrivacySection(context),
-            
+
+            const SizedBox(height: 2),
+
+            // More Apps Section
+            _buildSectionHeader(context, 'المزيد من التطبيقات'),
+            _buildMoreAppsSection(context),
+
             const SizedBox(height: 100),
           ],
         ),
@@ -54,7 +57,7 @@ class AboutScreen extends StatelessWidget {
 
   Widget _buildAboutSection(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(top: 16),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Theme.of(context).cardTheme.color,
@@ -88,7 +91,7 @@ class AboutScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          
+
           // App Name
           Text(
             'حقيقة ولا خرافة؟',
@@ -99,15 +102,15 @@ class AboutScreen extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 8),
-          
+
           // Description
           Text(
-            'اختبر معلوماتك اليومية بطريقة ممتعة وسريعة',
+            'اختبر معلوماتك يوميًا واكتشف الحقيقة من الخرافة في تحدي ممتع وسريع!',
             style: Theme.of(context).textTheme.bodyMedium,
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
-          
+
           // Version
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -118,7 +121,7 @@ class AboutScreen extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
+                const Icon(
                   Icons.info_outline_rounded,
                   color: AppColors.primaryDark,
                   size: 16,
@@ -166,29 +169,11 @@ class AboutScreen extends StatelessWidget {
         children: [
           _buildListTile(
             context,
-            icon: Icons.facebook_rounded,
-            iconColor: AppColors.facebook,
-            title: 'صفحة الفيسبوك',
-            subtitle: 'تابعنا على فيسبوك',
-            onTap: () => _launchURL('https://facebook.com'),
-          ),
-          _buildDivider(),
-          _buildListTile(
-            context,
-            icon: Icons.code_rounded,
-            iconColor: AppColors.textPrimaryDark,
-            title: 'الكود المصدري',
-            subtitle: 'شاهد المشروع على GitHub',
-            onTap: () => _launchURL('https://github.com'),
-          ),
-          _buildDivider(),
-          _buildListTile(
-            context,
             icon: Icons.star_rounded,
             iconColor: AppColors.warning,
             title: 'قيم التطبيق',
             subtitle: 'ساعدنا بتقييمك على المتجر',
-            onTap: () => _launchURL('https://play.google.com/store'),
+            onTap: () => ShareUtils.rateApp(),
           ),
           _buildDivider(),
           _buildListTile(
@@ -197,7 +182,17 @@ class AboutScreen extends StatelessWidget {
             iconColor: AppColors.info,
             title: 'شارك التطبيق',
             subtitle: 'شارك مع أصدقائك',
-            onTap: () => _shareApp(),
+            onTap: () => ShareUtils.shareApp(),
+          ),
+          _buildDivider(),
+          _buildListTile(
+            context,
+            icon: Icons.code_rounded,
+            iconColor: AppColors.textPrimaryDark,
+            title: 'الكود المصدري',
+            subtitle: 'شاهد المشروع على GitHub',
+            onTap: () =>
+                _launchURL('https://github.com/WalidFekry/fact-or-myth'),
           ),
         ],
       ),
@@ -219,7 +214,8 @@ class AboutScreen extends StatelessWidget {
             iconColor: AppColors.whatsapp,
             title: 'تواصل عبر واتساب',
             subtitle: 'راسلنا مباشرة',
-            onTap: () => _launchWhatsApp('مرحبًا، أريد التواصل بخصوص التطبيق'),
+            onTap: () => _launchWhatsApp(
+                'مرحبًا، أريد التواصل بخصوص تطبيق حقيقة ولا خرافة؟'),
           ),
           _buildDivider(),
           _buildListTile(
@@ -228,7 +224,7 @@ class AboutScreen extends StatelessWidget {
             iconColor: AppColors.warning,
             title: 'إرسال اقتراح',
             subtitle: 'شاركنا أفكارك',
-            onTap: () => _showSuggestionDialog(context),
+            onTap: () => _sendSuggestionEmail(),
           ),
         ],
       ),
@@ -244,22 +240,17 @@ class AboutScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _buildListTile(
-            context,
-            icon: Icons.apps_rounded,
-            iconColor: AppColors.primaryDark,
-            title: 'تطبيقات أخرى',
-            subtitle: 'اكتشف المزيد من تطبيقاتنا',
-            onTap: () => _launchURL('https://play.google.com/store'),
-          ),
-          _buildListTile(
-            context,
-            icon: Icons.apps_rounded,
-            iconColor: AppColors.primaryDark,
-            title: 'تطبيقات أخرى',
-            subtitle: 'اكتشف المزيد من تطبيقاتنا',
-            onTap: () => _launchURL('https://play.google.com/store'),
-          ),
+          if (Platform.isAndroid) ...[
+            _buildListTile(
+              context,
+              icon: Icons.apps_rounded,
+              iconColor: AppColors.primaryDark,
+              title: 'تطبيقات أخرى',
+              subtitle: 'اكتشف المزيد من تطبيقاتنا',
+              onTap: () => _launchURL(
+                  'https://play.google.com/store/apps/dev?id=6257553101128037563'),
+            ),
+          ]
         ],
       ),
     );
@@ -280,7 +271,8 @@ class AboutScreen extends StatelessWidget {
             iconColor: AppColors.info,
             title: 'سياسة الخصوصية',
             subtitle: 'اطلع على سياسة الخصوصية',
-            onTap: () => _launchURL('https://example.com/privacy'),
+            onTap: () => _launchURL(
+                'https://post.walid-fekry.com/fact-app/privacy-policy.html'),
           ),
         ],
       ),
@@ -348,69 +340,22 @@ class AboutScreen extends StatelessWidget {
   }
 
   Future<void> _launchWhatsApp(String message) async {
-    final phoneNumber = '1234567890'; // Replace with actual number
-    final url = 'https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message)}';
+    const phoneNumber = '+201094674881';
+    final url =
+        'https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message)}';
     await _launchURL(url);
   }
 
-  void _shareApp() {
-    Share.share(
-      'جرب تطبيق حقيقة ولا خرافة؟ - اختبر معلوماتك اليومية!\n'
-      'https://play.google.com/store',
-      subject: 'حقيقة ولا خرافة؟',
+  Future<void> _sendSuggestionEmail() async {
+    const String email = 'prowalidfekry@gmail.com';
+    const String subject = 'اقتراح جديد لتطبيق حقيقة ولا خرافة';
+    final Uri emailUri = Uri(
+      scheme: 'mailto',
+      path: email,
+      query: Uri.encodeFull('subject=$subject'),
     );
-  }
-
-  void _showSuggestionDialog(BuildContext context) {
-    final controller = TextEditingController();
-    
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppColors.surfaceDark,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        title: Row(
-          children: [
-            Icon(
-              Icons.lightbulb_outline_rounded,
-              color: AppColors.warning,
-              size: 24,
-            ),
-            const SizedBox(width: 8),
-            const Text('إرسال اقتراح'),
-          ],
-        ),
-        content: TextField(
-          controller: controller,
-          maxLines: 4,
-          decoration: InputDecoration(
-            hintText: 'اكتب اقتراحك هنا...',
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('إلغاء'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              if (controller.text.trim().isNotEmpty) {
-                Navigator.pop(context);
-                _launchWhatsApp('اقتراح: ${controller.text}');
-              }
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primaryDark,
-            ),
-            child: const Text('إرسال'),
-          ),
-        ],
-      ),
-    );
+    if (await canLaunchUrl(emailUri)) {
+      await launchUrl(emailUri, mode: LaunchMode.externalApplication);
+    }
   }
 }
