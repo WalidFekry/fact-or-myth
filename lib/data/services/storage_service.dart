@@ -242,4 +242,30 @@ class StorageService {
   Future<void> clearEverything() async {
     await _prefs.clear();
   }
+
+  // Notification Permission
+  Future<void> setNotificationPermissionShown(bool shown) async {
+    await _prefs.setBool('notification_permission_shown', shown);
+  }
+
+  bool hasNotificationPermissionBeenShown() {
+    return _prefs.getBool('notification_permission_shown') ?? false;
+  }
+
+  Future<void> setNotificationsEnabled(bool enabled) async {
+    await _prefs.setBool('notifications_enabled', enabled);
+  }
+
+  bool areNotificationsEnabled() {
+    return _prefs.getBool('notifications_enabled') ?? false;
+  }
+
+  // FCM Token
+  Future<void> saveFCMToken(String token) async {
+    await _prefs.setString('fcm_token', token);
+  }
+
+  Future<String?> getFCMToken() async {
+    return _prefs.getString('fcm_token');
+  }
 }

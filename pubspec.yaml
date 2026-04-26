@@ -38,6 +38,14 @@ dependencies:
   # UI
   flutter_svg: ^2.0.9
 
+  # Firebase
+  firebase_core: ^4.7.0
+  firebase_messaging: 16.2.0
+  firebase_crashlytics: 5.2.0
+  firebase_analytics: ^12.3.0
+
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

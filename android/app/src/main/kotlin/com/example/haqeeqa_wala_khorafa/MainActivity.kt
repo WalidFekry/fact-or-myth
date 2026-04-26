@@ -1,4 +1,4 @@
-package com.example.haqeeqa_wala_khorafa
+package fact.or.myth
 
 import io.flutter.embedding.android.FlutterActivity
 

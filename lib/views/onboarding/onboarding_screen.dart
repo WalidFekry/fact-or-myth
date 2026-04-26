@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/constants/assets.dart';
-import '../home/home_screen.dart';
+import '../notification_permission/notification_permission_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -44,8 +44,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     await prefs.setBool('is_first_time', false);
     
     if (mounted) {
+      // TASK 1: Navigate to notification permission screen after onboarding
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
+        MaterialPageRoute(builder: (_) => const NotificationPermissionScreen()),
       );
     }
   }

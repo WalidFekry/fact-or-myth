@@ -1,11 +1,13 @@
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import '../../core/network/api_client.dart';
 import '../../data/services/api_service.dart';
 import '../../data/services/storage_service.dart';
 import '../../data/services/network_service.dart';
 import '../../data/services/offline_storage_service.dart';
 import '../../data/services/sound_service.dart';
+import '../../data/services/notification_service.dart';
 import '../../data/repositories/auth_repository.dart';
 import '../../data/repositories/question_repository.dart';
 import '../../data/repositories/leaderboard_repository.dart';
@@ -26,6 +28,9 @@ Future<void> setupServiceLocator() async {
   final sharedPreferences = await SharedPreferences.getInstance();
   getIt.registerSingleton<SharedPreferences>(sharedPreferences);
   
+  // Firebase Messaging
+  getIt.registerLazySingleton<FirebaseMessaging>(() => FirebaseMessaging.instance);
+  
   // Initialize offline storage
   final offlineStorage = OfflineStorageService();
   await offlineStorage.init();
@@ -43,6 +48,15 @@ Future<void> setupServiceLocator() async {
   );
   getIt.registerLazySingleton<NetworkService>(() => NetworkService());
   getIt.registerLazySingleton<SoundService>(() => SoundService());
+  
+  // TASK 2: Register NotificationService
+  getIt.registerLazySingleton<NotificationService>(
+    () => NotificationService(
+      getIt<FirebaseMessaging>(),
+      getIt<StorageService>(),
+      getIt<ApiService>(),
+    ),
+  );
   
   // Repositories
   getIt.registerLazySingleton<AuthRepository>(

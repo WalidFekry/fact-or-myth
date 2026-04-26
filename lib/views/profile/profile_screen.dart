@@ -7,6 +7,8 @@ import '../../viewmodels/profile_viewmodel.dart';
 import '../../viewmodels/auth_viewmodel.dart';
 import '../../data/services/api_service.dart';
 import '../../data/services/sound_service.dart';
+import '../../data/services/notification_service.dart';
+import '../../data/services/storage_service.dart';
 import '../../widgets/loading_widget.dart';
 import '../../widgets/error_widget.dart';
 import '../../widgets/custom_app_bar.dart';
@@ -261,6 +263,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ],
                       ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // TASK 8: Notifications Settings Card
+                  Card(
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 4,
+                      ),
+                      leading: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryDark.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Icon(
+                          Icons.notifications_rounded,
+                          color: AppColors.primaryDark,
+                          size: 20,
+                        ),
+                      ),
+                      title: Text(
+                        'الإشعارات',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
+                      ),
+                      subtitle: Text(
+                        'تلقي إشعارات الأسئلة اليومية',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                      trailing: _buildNotificationToggle(),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -642,6 +679,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       );
     }
+  }
+
+  // TASK 8: Build notification toggle
+  Widget _buildNotificationToggle() {
+    final storageService = getIt<StorageService>();
+    final notificationService = getIt<NotificationService>();
+    final isEnabled = storageService.areNotificationsEnabled();
+
+    return Switch(
+      value: isEnabled,
+      onChanged: (value) async {
+        await notificationService.toggleNotifications(value);
+        setState(() {}); // Refresh UI
+        
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                value
+                    ? 'تم تفعيل الإشعارات 🔔'
+                    : 'تم إيقاف الإشعارات',
+              ),
+              duration: const Duration(seconds: 2),
+              backgroundColor: value ? AppColors.success : AppColors.textSecondaryDark,
+            ),
+          );
+        }
+      },
+      activeColor: AppColors.primaryDark,
+    );
   }
 
 }
