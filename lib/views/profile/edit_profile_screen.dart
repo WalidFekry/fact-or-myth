@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/di/service_locator.dart';
+import '../../core/theme/app_colors.dart';
 import '../../data/models/profile_model.dart';
 import '../../viewmodels/profile_viewmodel.dart';
 import '../../widgets/avatar_selector.dart';
@@ -101,7 +102,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     child: ElevatedButton(
                       onPressed: vm.isLoading ? null : () => _saveProfile(vm),
                       child: vm.isLoading
-                          ? const CircularProgressIndicator(color: Colors.white)
+                          ? const CircularProgressIndicator(color: AppColors.pureWhite)
                           : const Text('حفظ'),
                     ),
                   ),

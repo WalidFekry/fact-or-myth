@@ -2,12 +2,32 @@ class AppConstants {
   // API Base URL - CHANGE THIS TO YOUR SERVER
   static const String baseUrl = 'https://post.walid-fekry.com/fact-app/api';
   
-  // Storage Keys
+  // Storage Keys - User Session
   static const String keyThemeMode = 'theme_mode';
   static const String keyUserId = 'user_id';
   static const String keyUserName = 'user_name';
   static const String keyUserAvatar = 'user_avatar';
   static const String keyIsLoggedIn = 'is_logged_in';
+  
+  // Storage Keys - Onboarding & App State
+  static const String keyIsFirstTime = 'is_first_time';
+  static const String keyOnboardingCompleted = 'onboarding_completed';
+  
+  // Storage Keys - Guest Mode
+  static const String keyGuestQuestionId = 'guest_question_id';
+  static const String keyGuestAnswer = 'guest_answer';
+  static const String keyGuestIsCorrect = 'guest_is_correct';
+  static const String keyGuestAnsweredDate = 'guest_answered_date';
+  
+  // Storage Keys - Daily Question Cache
+  static const String keyCachedDailyQuestion = 'cached_daily_question';
+  static const String keyCachedDailyQuestionTimestamp = 'cached_daily_question_timestamp';
+  static const String keyDailyQuestionAnswer = 'daily_question_answer';
+  
+  // Storage Keys - Notifications
+  static const String keyNotificationPermissionShown = 'notification_permission_shown';
+  static const String keyNotificationsEnabled = 'notifications_enabled';
+  static const String keyFCMToken = 'fcm_token';
   
   // Categories
   static const List<String> categories = [

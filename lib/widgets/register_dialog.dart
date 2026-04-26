@@ -160,7 +160,7 @@ class _RegisterDialogState extends State<RegisterDialog> {
                               width: 20,
                               height: 20,
                               child: CircularProgressIndicator(
-                                color: Colors.white,
+                                color: AppColors.pureWhite,
                                 strokeWidth: 2,
                               ),
                             )

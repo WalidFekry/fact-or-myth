@@ -438,7 +438,7 @@ class FreeQuestionsScreen extends StatelessWidget {
               children: [
                 Icon(
                   vm.isCorrect! ? Icons.check_circle_rounded : Icons.cancel_rounded,
-                  color: Colors.white,
+                  color: AppColors.pureWhite,
                   size: 24,
                 ),
                 const SizedBox(width: 12),
@@ -448,13 +448,13 @@ class FreeQuestionsScreen extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                      color: AppColors.pureWhite,
                     ),
                   ),
                 ),
                 // Share Button
                 IconButton(
-                  icon: const Icon(Icons.share_rounded, color: Colors.white, size: 20),
+                  icon: const Icon(Icons.share_rounded, color: AppColors.pureWhite, size: 20),
                   onPressed: () {
                     if (vm.question != null && vm.userAnswer != null) {
                       ShareUtils.shareResult(

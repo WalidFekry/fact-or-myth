@@ -182,7 +182,7 @@ class _NotificationPermissionScreenState extends State<NotificationPermissionScr
                           height: 24,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor: AlwaysStoppedAnimation<Color>(AppColors.pureWhite),
                           ),
                         )
                       : const Text(
@@ -190,7 +190,7 @@ class _NotificationPermissionScreenState extends State<NotificationPermissionScr
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
-                            color: Colors.white,
+                            color: AppColors.pureWhite,
                           ),
                         ),
                 ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/constants/app_constants.dart';
 import '../../core/constants/assets.dart';
 import '../notification_permission/notification_permission_screen.dart';
 
@@ -41,7 +42,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   Future<void> _completeOnboarding() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('is_first_time', false);
+    await prefs.setBool(AppConstants.keyIsFirstTime, false);
     
     if (mounted) {
       // TASK 1: Navigate to notification permission screen after onboarding
@@ -92,7 +93,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           child: const Icon(
                             Icons.quiz_rounded,
                             size: 24,
-                            color: Colors.white,
+                            color: AppColors.pureWhite,
                           ),
                         );
                       },

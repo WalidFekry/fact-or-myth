@@ -110,7 +110,7 @@ class _CountdownTimerState extends State<CountdownTimer> {
               style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: AppColors.pureWhite,
               ),
             ),
           ),

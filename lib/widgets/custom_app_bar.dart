@@ -96,7 +96,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                 child: const Icon(
                                   Icons.quiz_rounded,
                                   size: 18,
-                                  color: Colors.white,
+                                  color: AppColors.pureWhite,
                                 ),
                               );
                             },

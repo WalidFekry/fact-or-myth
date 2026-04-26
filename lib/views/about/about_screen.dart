@@ -81,7 +81,7 @@ class AboutScreen extends StatelessWidget {
                   child: const Icon(
                     Icons.quiz_rounded,
                     size: 40,
-                    color: Colors.white,
+                    color: AppColors.pureWhite,
                   ),
                 );
               },
@@ -167,7 +167,7 @@ class AboutScreen extends StatelessWidget {
           _buildListTile(
             context,
             icon: Icons.facebook_rounded,
-            iconColor: const Color(0xFF1877F2),
+            iconColor: AppColors.facebook,
             title: 'صفحة الفيسبوك',
             subtitle: 'تابعنا على فيسبوك',
             onTap: () => _launchURL('https://facebook.com'),
@@ -216,7 +216,7 @@ class AboutScreen extends StatelessWidget {
           _buildListTile(
             context,
             icon: Icons.chat_rounded,
-            iconColor: const Color(0xFF25D366),
+            iconColor: AppColors.whatsapp,
             title: 'تواصل عبر واتساب',
             subtitle: 'راسلنا مباشرة',
             onTap: () => _launchWhatsApp('مرحبًا، أريد التواصل بخصوص التطبيق'),

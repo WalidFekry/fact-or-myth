@@ -20,10 +20,10 @@ class AppTheme {
         secondary: AppColors.secondaryDark,
         surface: AppColors.surfaceDark,
         error: AppColors.error,
-        onPrimary: Colors.white,
-        onSecondary: Colors.white,
+        onPrimary: AppColors.pureWhite,
+        onSecondary: AppColors.pureWhite,
         onSurface: AppColors.textPrimaryDark,
-        onError: Colors.white,
+        onError: AppColors.pureWhite,
       ),
       
       appBarTheme: AppBarTheme(
@@ -52,7 +52,7 @@ class AppTheme {
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primaryDark,
-          foregroundColor: Colors.white,
+          foregroundColor: AppColors.pureWhite,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
           elevation: 0,
           shape: RoundedRectangleBorder(
@@ -226,10 +226,10 @@ class AppTheme {
         secondary: AppColors.secondaryLight,
         surface: AppColors.surfaceLight,
         error: AppColors.error,
-        onPrimary: Colors.white,
-        onSecondary: Colors.white,
+        onPrimary: AppColors.pureWhite,
+        onSecondary: AppColors.pureWhite,
         onSurface: AppColors.textPrimaryLight,
-        onError: Colors.white,
+        onError: AppColors.pureWhite,
       ),
       
       appBarTheme: AppBarTheme(
@@ -258,7 +258,7 @@ class AppTheme {
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primaryLight,
-          foregroundColor: Colors.white,
+          foregroundColor: AppColors.pureWhite,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
           elevation: 0,
           shape: RoundedRectangleBorder(

@@ -75,7 +75,7 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
                       child: const Icon(
                         Icons.quiz_rounded,
                         size: 16,
-                        color: Colors.white,
+                        color: AppColors.pureWhite,
                       ),
                     );
                   },
@@ -492,7 +492,7 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
           children: [
             Icon(
               isCorrect ? Icons.check_circle_rounded : Icons.cancel_rounded,
-              color: Colors.white,
+              color: AppColors.pureWhite,
               size: 24,
             ),
             const SizedBox(width: 12),
@@ -502,13 +502,13 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
                 style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
-                  color: Colors.white,
+                  color: AppColors.pureWhite,
                 ),
               ),
             ),
             // Share Button
             IconButton(
-              icon: const Icon(Icons.share_rounded, color: Colors.white, size: 20),
+              icon: const Icon(Icons.share_rounded, color: AppColors.pureWhite, size: 20),
               onPressed: () {
                 if (vm.question != null) {
                   ShareUtils.shareResult(
@@ -686,10 +686,10 @@ ${vm.question!.explanation}
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: AppColors.pureWhite.withOpacity(0.2),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(icon, color: Colors.white, size: 20),
+                child: Icon(icon, color: AppColors.pureWhite, size: 20),
               ),
               const SizedBox(width: 12),
               Text(
@@ -697,7 +697,7 @@ ${vm.question!.explanation}
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  color: Colors.white,
+                  color: AppColors.pureWhite,
                 ),
               ),
             ],

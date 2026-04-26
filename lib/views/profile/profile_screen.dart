@@ -417,7 +417,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               child: const Icon(
                                 Icons.quiz_rounded,
                                 size: 14,
-                                color: Colors.white,
+                                color: AppColors.pureWhite,
                               ),
                             );
                           },

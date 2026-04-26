@@ -81,22 +81,22 @@ class _AnswerButtonState extends State<AnswerButton> with SingleTickerProviderSt
       if (isThisButtonCorrect) {
         // This is the correct answer - always show green
         backgroundColor = AppColors.success;
-        textColor = Colors.white;
+        textColor = AppColors.pureWhite;
         icon = Icons.check_circle_rounded;
       } else if (isThisButtonSelected) {
         // This button was selected but is wrong - show red
         backgroundColor = AppColors.error;
-        textColor = Colors.white;
+        textColor = AppColors.pureWhite;
         icon = Icons.cancel_rounded;
       } else {
         // Not selected and not correct - neutral
         backgroundColor = Theme.of(context).cardColor ?? AppColors.primaryDark.withOpacity(0.3);
-        textColor = Theme.of(context).textTheme.bodyLarge?.color ?? Colors.white;
+        textColor = Theme.of(context).textTheme.bodyLarge?.color ?? AppColors.textPrimaryDark;
       }
     } else {
       // Before answer is submitted
       backgroundColor = AppColors.primaryDark;
-      textColor = Colors.white;
+      textColor = AppColors.pureWhite;
     }
 
     return AnimatedBuilder(

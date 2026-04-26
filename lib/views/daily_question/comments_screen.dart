@@ -191,7 +191,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
                     color: Theme.of(context).colorScheme.surface,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
+                        color: AppColors.overlayLight,
                         blurRadius: 4,
                         offset: const Offset(0, -2),
                       ),
@@ -322,7 +322,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
                                     ? null 
                                     : () => _addComment(vm),
                                 icon: const Icon(Icons.send_rounded, size: 20),
-                                color: Colors.white,
+                                color: AppColors.pureWhite,
                               ),
                             ),
                           ],

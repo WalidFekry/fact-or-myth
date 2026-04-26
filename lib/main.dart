@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'core/constants/app_constants.dart';
 import 'core/di/service_locator.dart';
 import 'core/theme/app_theme.dart';
 import 'data/services/notification_service.dart';
@@ -135,8 +136,8 @@ class _InitialScreenState extends State<InitialScreen> {
 
   Future<void> _checkFirstTime() async {
     final prefs = await SharedPreferences.getInstance();
-    final isFirstTime = prefs.getBool('is_first_time') ?? true;
-    final notificationPermissionShown = prefs.getBool('notification_permission_shown') ?? false;
+    final isFirstTime = prefs.getBool(AppConstants.keyIsFirstTime) ?? true;
+    final notificationPermissionShown = prefs.getBool(AppConstants.keyNotificationPermissionShown) ?? false;
     
     if (mounted) {
       if (isFirstTime) {

@@ -295,7 +295,7 @@ class LeaderboardScreen extends StatelessWidget {
                           child: Text(
                             user.rank != null ? '#${user.rank}' : '--',
                             style: const TextStyle(
-                              color: Colors.white,
+                              color: AppColors.pureWhite,
                               fontWeight: FontWeight.bold,
                               fontSize: 14,
                             ),

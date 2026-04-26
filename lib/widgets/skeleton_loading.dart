@@ -7,9 +7,11 @@ class QuestionSkeletonLoader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Shimmer.fromColors(
-      baseColor: Theme.of(context).cardColor ?? AppColors.cardDark,
-      highlightColor: AppColors.primaryDark.withOpacity(0.1),
+      baseColor: isDark ? AppColors.shimmerBaseDark : AppColors.shimmerBaseLight,
+      highlightColor: isDark ? AppColors.shimmerHighlightDark : AppColors.shimmerHighlightLight,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -20,7 +22,7 @@ class QuestionSkeletonLoader extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: isDark ? AppColors.shimmerBaseDark : AppColors.shimmerBaseLight,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Column(
@@ -31,7 +33,7 @@ class QuestionSkeletonLoader extends StatelessWidget {
                     width: double.infinity,
                     height: 20,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: isDark ? AppColors.shimmerBaseDark : AppColors.shimmerBaseLight,
                       borderRadius: BorderRadius.circular(4),
                     ),
                   ),
@@ -40,7 +42,7 @@ class QuestionSkeletonLoader extends StatelessWidget {
                     width: MediaQuery.of(context).size.width * 0.7,
                     height: 20,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: isDark ? AppColors.shimmerBaseDark : AppColors.shimmerBaseLight,
                       borderRadius: BorderRadius.circular(4),
                     ),
                   ),
@@ -50,21 +52,21 @@ class QuestionSkeletonLoader extends StatelessWidget {
             const SizedBox(height: 24),
             
             // Answer Buttons Skeleton
-            _buildButtonSkeleton(),
+            _buildButtonSkeleton(isDark),
             const SizedBox(height: 12),
-            _buildButtonSkeleton(),
+            _buildButtonSkeleton(isDark),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildButtonSkeleton() {
+  Widget _buildButtonSkeleton(bool isDark) {
     return Container(
       width: double.infinity,
       height: 52,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AppColors.shimmerBaseDark : AppColors.shimmerBaseLight,
         borderRadius: BorderRadius.circular(12),
       ),
     );
@@ -76,9 +78,11 @@ class CommentSkeletonLoader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Shimmer.fromColors(
-      baseColor: Theme.of(context).cardColor ?? AppColors.cardDark,
-      highlightColor: AppColors.primaryDark.withOpacity(0.1),
+      baseColor: isDark ? AppColors.shimmerBaseDark : AppColors.shimmerBaseLight,
+      highlightColor: isDark ? AppColors.shimmerHighlightDark : AppColors.shimmerHighlightLight,
       child: ListView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
@@ -88,7 +92,7 @@ class CommentSkeletonLoader extends StatelessWidget {
             margin: const EdgeInsets.only(bottom: 12),
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: isDark ? AppColors.shimmerBaseDark : AppColors.shimmerBaseLight,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
@@ -99,8 +103,8 @@ class CommentSkeletonLoader extends StatelessWidget {
                     Container(
                       width: 32,
                       height: 32,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
+                      decoration: BoxDecoration(
+                        color: isDark ? AppColors.shimmerBaseDark : AppColors.shimmerBaseLight,
                         shape: BoxShape.circle,
                       ),
                     ),
@@ -109,7 +113,7 @@ class CommentSkeletonLoader extends StatelessWidget {
                       width: 100,
                       height: 14,
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: isDark ? AppColors.shimmerBaseDark : AppColors.shimmerBaseLight,
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
@@ -120,7 +124,7 @@ class CommentSkeletonLoader extends StatelessWidget {
                   width: double.infinity,
                   height: 14,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: isDark ? AppColors.shimmerBaseDark : AppColors.shimmerBaseLight,
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),

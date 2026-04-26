@@ -23,7 +23,7 @@ class ModernBottomNav extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: AppColors.overlayLight,
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -41,8 +41,8 @@ class ModernBottomNav extends StatelessWidget {
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
                 color: isDark
-                    ? Colors.white.withOpacity(0.05)
-                    : Colors.black.withOpacity(0.05),
+                    ? AppColors.dividerDark
+                    : AppColors.dividerLight,
                 width: 1,
               ),
             ),

@@ -53,17 +53,17 @@ class StorageService {
     required bool answer,
     required bool isCorrect,
   }) async {
-    await _prefs.setInt('guest_question_id', questionId);
-    await _prefs.setBool('guest_answer', answer);
-    await _prefs.setBool('guest_is_correct', isCorrect);
-    await _prefs.setString('guest_answered_date', DateTime.now().toIso8601String());
+    await _prefs.setInt(AppConstants.keyGuestQuestionId, questionId);
+    await _prefs.setBool(AppConstants.keyGuestAnswer, answer);
+    await _prefs.setBool(AppConstants.keyGuestIsCorrect, isCorrect);
+    await _prefs.setString(AppConstants.keyGuestAnsweredDate, DateTime.now().toIso8601String());
   }
 
   Map<String, dynamic>? getGuestAnswer() {
-    final questionId = _prefs.getInt('guest_question_id');
-    final answer = _prefs.getBool('guest_answer');
-    final isCorrect = _prefs.getBool('guest_is_correct');
-    final answeredDate = _prefs.getString('guest_answered_date');
+    final questionId = _prefs.getInt(AppConstants.keyGuestQuestionId);
+    final answer = _prefs.getBool(AppConstants.keyGuestAnswer);
+    final isCorrect = _prefs.getBool(AppConstants.keyGuestIsCorrect);
+    final answeredDate = _prefs.getString(AppConstants.keyGuestAnsweredDate);
 
     if (questionId == null || answer == null || isCorrect == null || answeredDate == null) {
       return null;
@@ -91,17 +91,17 @@ class StorageService {
   }
 
   Future<void> clearGuestAnswer() async {
-    await _prefs.remove('guest_question_id');
-    await _prefs.remove('guest_answer');
-    await _prefs.remove('guest_is_correct');
-    await _prefs.remove('guest_answered_date');
+    await _prefs.remove(AppConstants.keyGuestQuestionId);
+    await _prefs.remove(AppConstants.keyGuestAnswer);
+    await _prefs.remove(AppConstants.keyGuestIsCorrect);
+    await _prefs.remove(AppConstants.keyGuestAnsweredDate);
   }
 
   // Get guest answer for migration on registration
   Map<String, dynamic>? getGuestAnswerForMigration() {
-    final questionId = _prefs.getInt('guest_question_id');
-    final answer = _prefs.getBool('guest_answer');
-    final isCorrect = _prefs.getBool('guest_is_correct');
+    final questionId = _prefs.getInt(AppConstants.keyGuestQuestionId);
+    final answer = _prefs.getBool(AppConstants.keyGuestAnswer);
+    final isCorrect = _prefs.getBool(AppConstants.keyGuestIsCorrect);
 
     if (questionId == null || answer == null || isCorrect == null) {
       return null;
@@ -120,13 +120,13 @@ class StorageService {
         ? question 
         : question.toJson();
     
-    await _prefs.setString('cached_daily_question', jsonEncode(questionJson));
-    await _prefs.setString('cached_daily_question_timestamp', timestamp.toIso8601String());
+    await _prefs.setString(AppConstants.keyCachedDailyQuestion, jsonEncode(questionJson));
+    await _prefs.setString(AppConstants.keyCachedDailyQuestionTimestamp, timestamp.toIso8601String());
   }
 
   Map<String, dynamic>? getCachedDailyQuestion() {
-    final questionStr = _prefs.getString('cached_daily_question');
-    final timestampStr = _prefs.getString('cached_daily_question_timestamp');
+    final questionStr = _prefs.getString(AppConstants.keyCachedDailyQuestion);
+    final timestampStr = _prefs.getString(AppConstants.keyCachedDailyQuestionTimestamp);
 
     if (questionStr == null || timestampStr == null) {
       return null;
@@ -139,8 +139,8 @@ class StorageService {
   }
 
   Future<void> clearDailyQuestionCache() async {
-    await _prefs.remove('cached_daily_question');
-    await _prefs.remove('cached_daily_question_timestamp');
+    await _prefs.remove(AppConstants.keyCachedDailyQuestion);
+    await _prefs.remove(AppConstants.keyCachedDailyQuestionTimestamp);
   }
 
   // TASK 1: Save Daily Question Answer State (CRITICAL)
@@ -166,12 +166,12 @@ class StorageService {
       'date': DateTime.now().toIso8601String().split('T')[0], // Store date for daily reset
     };
     
-    await _prefs.setString('daily_question_answer', jsonEncode(answerData));
+    await _prefs.setString(AppConstants.keyDailyQuestionAnswer, jsonEncode(answerData));
   }
 
   // TASK 2: Load Daily Question Answer State
   Map<String, dynamic>? getDailyQuestionAnswer() {
-    final answerStr = _prefs.getString('daily_question_answer');
+    final answerStr = _prefs.getString(AppConstants.keyDailyQuestionAnswer);
     
     if (answerStr == null) {
       return null;
@@ -193,7 +193,7 @@ class StorageService {
   }
 
   Future<void> clearDailyQuestionAnswer() async {
-    await _prefs.remove('daily_question_answer');
+    await _prefs.remove(AppConstants.keyDailyQuestionAnswer);
   }
 
   // Check if answer is from today
@@ -217,7 +217,7 @@ class StorageService {
     await clearGuestAnswer();
     
     // Clear any other user-specific data
-    await _prefs.remove('onboarding_completed');
+    await _prefs.remove(AppConstants.keyOnboardingCompleted);
     
     // Note: We keep theme preference and sound preference
     // as they are user preferences, not session data
@@ -245,27 +245,27 @@ class StorageService {
 
   // Notification Permission
   Future<void> setNotificationPermissionShown(bool shown) async {
-    await _prefs.setBool('notification_permission_shown', shown);
+    await _prefs.setBool(AppConstants.keyNotificationPermissionShown, shown);
   }
 
   bool hasNotificationPermissionBeenShown() {
-    return _prefs.getBool('notification_permission_shown') ?? false;
+    return _prefs.getBool(AppConstants.keyNotificationPermissionShown) ?? false;
   }
 
   Future<void> setNotificationsEnabled(bool enabled) async {
-    await _prefs.setBool('notifications_enabled', enabled);
+    await _prefs.setBool(AppConstants.keyNotificationsEnabled, enabled);
   }
 
   bool areNotificationsEnabled() {
-    return _prefs.getBool('notifications_enabled') ?? false;
+    return _prefs.getBool(AppConstants.keyNotificationsEnabled) ?? false;
   }
 
   // FCM Token
   Future<void> saveFCMToken(String token) async {
-    await _prefs.setString('fcm_token', token);
+    await _prefs.setString(AppConstants.keyFCMToken, token);
   }
 
   Future<String?> getFCMToken() async {
-    return _prefs.getString('fcm_token');
+    return _prefs.getString(AppConstants.keyFCMToken);
   }
 }
