@@ -4,6 +4,7 @@ import '../../data/services/api_service.dart';
 import '../../data/services/storage_service.dart';
 import '../../data/services/network_service.dart';
 import '../../data/services/offline_storage_service.dart';
+import '../../data/services/sound_service.dart';
 import '../../data/repositories/auth_repository.dart';
 import '../../data/repositories/question_repository.dart';
 import '../../data/repositories/leaderboard_repository.dart';
@@ -35,6 +36,7 @@ Future<void> setupServiceLocator() async {
   );
   getIt.registerLazySingleton<ApiService>(() => ApiService());
   getIt.registerLazySingleton<NetworkService>(() => NetworkService());
+  getIt.registerLazySingleton<SoundService>(() => SoundService());
   
   // Repositories
   getIt.registerLazySingleton<AuthRepository>(

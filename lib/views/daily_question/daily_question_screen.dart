@@ -3,15 +3,17 @@ import 'package:provider/provider.dart';
 import '../../core/di/service_locator.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/constants/assets.dart';
+import '../../core/utils/share_utils.dart';
 import '../../viewmodels/daily_question_viewmodel.dart';
 import '../../viewmodels/auth_viewmodel.dart';
 import '../../viewmodels/theme_viewmodel.dart';
 import '../../widgets/answer_button.dart';
 import '../../widgets/countdown_timer.dart';
-import '../../widgets/loading_widget.dart';
+import '../../widgets/skeleton_loading.dart';
 import '../../widgets/error_widget.dart';
 import '../../widgets/register_dialog.dart';
 import '../../widgets/voting_stats_widget.dart';
+import '../../data/services/sound_service.dart';
 import '../leaderboard/leaderboard_screen.dart';
 import '../about/about_screen.dart';
 import 'comments_screen.dart';
@@ -92,7 +94,7 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
           child: Consumer<DailyQuestionViewModel>(
             builder: (context, vm, _) {
               if (vm.isLoading) {
-                return const LoadingWidget(message: 'جاري التحميل...');
+                return const QuestionSkeletonLoader();
               }
 
               if (vm.error != null) {
@@ -215,19 +217,40 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
   Widget _buildAnswerButtons(DailyQuestionViewModel vm) {
     // Disable buttons during loading or if already answered
     final isEnabled = vm.canSubmitAnswer;
+    final soundService = getIt<SoundService>();
     
     return Column(
       children: [
         AnswerButton(
           text: 'حقيقة ✓',
           isTrue: true,
-          onPressed: isEnabled ? () => vm.submitAnswer(true) : () {},
+          onPressed: isEnabled ? () async {
+            await vm.submitAnswer(true);
+            // Play sound after answer is submitted
+            if (vm.isCorrect != null) {
+              if (vm.isCorrect!) {
+                soundService.playCorrectSound();
+              } else {
+                soundService.playWrongSound();
+              }
+            }
+          } : () {},
         ),
         const SizedBox(height: 12),
         AnswerButton(
           text: 'خرافة ✗',
           isTrue: false,
-          onPressed: isEnabled ? () => vm.submitAnswer(false) : () {},
+          onPressed: isEnabled ? () async {
+            await vm.submitAnswer(false);
+            // Play sound after answer is submitted
+            if (vm.isCorrect != null) {
+              if (vm.isCorrect!) {
+                soundService.playCorrectSound();
+              } else {
+                soundService.playWrongSound();
+              }
+            }
+          } : () {},
         ),
         
         // Show loading indicator during submission
@@ -395,6 +418,22 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
                   color: Colors.white,
                 ),
               ),
+            ),
+            // Share Button
+            IconButton(
+              icon: const Icon(Icons.share_rounded, color: Colors.white, size: 20),
+              onPressed: () {
+                if (vm.question != null) {
+                  ShareUtils.shareResult(
+                    questionText: vm.question!.question,
+                    correctAnswer: vm.question!.correctAnswer,
+                    explanation: vm.question!.explanation,
+                    userAnswer: vm.userAnswer!,
+                    isCorrect: isCorrect,
+                  );
+                }
+              },
+              tooltip: 'مشاركة',
             ),
           ],
         ),

@@ -7,6 +7,7 @@ import '../../viewmodels/profile_viewmodel.dart';
 import '../../viewmodels/theme_viewmodel.dart';
 import '../../viewmodels/auth_viewmodel.dart';
 import '../../data/services/api_service.dart';
+import '../../data/services/sound_service.dart';
 import '../../widgets/loading_widget.dart';
 import '../../widgets/error_widget.dart';
 import '../../widgets/custom_app_bar.dart';
@@ -34,6 +35,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
           title: 'الملف الشخصي',
           showBack: false,
           actions: [
+            // Sound Toggle
+            Consumer<ProfileViewModel>(
+              builder: (context, vm, _) {
+                if (vm.profile == null) return const SizedBox.shrink();
+                final soundService = getIt<SoundService>();
+                return IconButton(
+                  icon: Icon(
+                    soundService.isSoundEnabled 
+                        ? Icons.volume_up_rounded 
+                        : Icons.volume_off_rounded,
+                    size: 22,
+                  ),
+                  onPressed: () {
+                    soundService.toggleSound();
+                    setState(() {}); // Refresh icon
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          soundService.isSoundEnabled 
+                              ? 'تم تفعيل الصوت 🔊' 
+                              : 'تم إيقاف الصوت 🔇',
+                        ),
+                        duration: const Duration(seconds: 1),
+                        backgroundColor: AppColors.primaryDark,
+                      ),
+                    );
+                  },
+                  tooltip: soundService.isSoundEnabled ? 'إيقاف الصوت' : 'تفعيل الصوت',
+                );
+              },
+            ),
             Consumer<ProfileViewModel>(
               builder: (context, vm, _) {
                 if (vm.profile == null) return const SizedBox.shrink();

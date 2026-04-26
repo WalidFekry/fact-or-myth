@@ -3,11 +3,14 @@ import 'package:provider/provider.dart';
 import '../../core/di/service_locator.dart';
 import '../../core/constants/app_constants.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/utils/share_utils.dart';
 import '../../viewmodels/free_questions_viewmodel.dart';
 import '../../widgets/answer_button.dart';
-import '../../widgets/loading_widget.dart';
+import '../../widgets/skeleton_loading.dart';
 import '../../widgets/error_widget.dart';
 import '../../widgets/custom_app_bar.dart';
+import '../../data/services/sound_service.dart';
+import '../../data/models/question_model.dart';
 
 class FreeQuestionsScreen extends StatelessWidget {
   const FreeQuestionsScreen({super.key});
@@ -239,7 +242,7 @@ class FreeQuestionsScreen extends StatelessWidget {
                 // Question Content
                 Expanded(
                   child: vm.isLoading
-                      ? const LoadingWidget(message: 'جاري التحميل...')
+                      ? const QuestionSkeletonLoader()
                       : vm.error != null
                           ? ErrorDisplayWidget(
                               message: vm.error!,
@@ -367,18 +370,40 @@ class FreeQuestionsScreen extends StatelessWidget {
   }
 
   Widget _buildAnswerButtons(FreeQuestionsViewModel vm) {
+    final soundService = getIt<SoundService>();
+    
     return Column(
       children: [
         AnswerButton(
           text: 'حقيقة ✓',
           isTrue: true,
-          onPressed: () => vm.submitAnswer(true),
+          onPressed: () {
+            vm.submitAnswer(true);
+            // Play sound after answer
+            if (vm.isCorrect != null) {
+              if (vm.isCorrect!) {
+                soundService.playCorrectSound();
+              } else {
+                soundService.playWrongSound();
+              }
+            }
+          },
         ),
         const SizedBox(height: 12),
         AnswerButton(
           text: 'خرافة ✗',
           isTrue: false,
-          onPressed: () => vm.submitAnswer(false),
+          onPressed: () {
+            vm.submitAnswer(false);
+            // Play sound after answer
+            if (vm.isCorrect != null) {
+              if (vm.isCorrect!) {
+                soundService.playCorrectSound();
+              } else {
+                soundService.playWrongSound();
+              }
+            }
+          },
         ),
       ],
     );
@@ -427,6 +452,22 @@ class FreeQuestionsScreen extends StatelessWidget {
                       color: Colors.white,
                     ),
                   ),
+                ),
+                // Share Button
+                IconButton(
+                  icon: const Icon(Icons.share_rounded, color: Colors.white, size: 20),
+                  onPressed: () {
+                    if (vm.question != null && vm.userAnswer != null) {
+                      ShareUtils.shareResult(
+                        questionText: vm.question!.question,
+                        correctAnswer: vm.question!.correctAnswer,
+                        explanation: vm.question!.explanation,
+                        userAnswer: vm.userAnswer!,
+                        isCorrect: vm.isCorrect!,
+                      );
+                    }
+                  },
+                  tooltip: 'مشاركة',
                 ),
               ],
             ),

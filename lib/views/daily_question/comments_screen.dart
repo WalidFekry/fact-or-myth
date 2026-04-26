@@ -201,6 +201,22 @@ class _CommentsScreenState extends State<CommentsScreen> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
+                        // Quick Reaction Chips
+                        if (!vm.hasUserCommented())
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: [
+                                _buildQuickReactionChip('❤️ إعجاب', vm),
+                                _buildQuickReactionChip('🔥 اتفق', vm),
+                                _buildQuickReactionChip('😂 ضحكني', vm),
+                                _buildQuickReactionChip('🤔 مثير للتفكير', vm),
+                              ],
+                            ),
+                          ),
                         // Already commented message
                         if (vm.hasUserCommented())
                           Container(
@@ -318,6 +334,34 @@ class _CommentsScreenState extends State<CommentsScreen> {
               ],
             );
           },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildQuickReactionChip(String text, CommentViewModel vm) {
+    return InkWell(
+      onTap: vm.isLoading ? null : () {
+        _commentController.text = text;
+        _addComment(vm);
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: AppColors.primaryDark.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: AppColors.primaryDark.withOpacity(0.3),
+            width: 1,
+          ),
+        ),
+        child: Text(
+          text,
+          style: TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            color: AppColors.primaryDark,
+          ),
         ),
       ),
     );
