@@ -15,7 +15,7 @@ class AppTheme {
       scaffoldBackgroundColor: AppColors.backgroundDark,
       fontFamily: fontFamily, // Global Somar font
       
-      colorScheme: ColorScheme.dark(
+      colorScheme: const ColorScheme.dark(
         primary: AppColors.primaryDark,
         secondary: AppColors.secondaryDark,
         surface: AppColors.surfaceDark,
@@ -82,7 +82,7 @@ class AppTheme {
         ),
       ),
       
-      textTheme: TextTheme(
+      textTheme: const TextTheme(
         // Display styles - Bold (Somar Bold)
         displayLarge: TextStyle(
           fontFamily: fontFamily,
@@ -221,7 +221,7 @@ class AppTheme {
       scaffoldBackgroundColor: AppColors.backgroundLight,
       fontFamily: fontFamily, // Global Somar font
       
-      colorScheme: ColorScheme.light(
+      colorScheme: const ColorScheme.light(
         primary: AppColors.primaryLight,
         secondary: AppColors.secondaryLight,
         surface: AppColors.surfaceLight,
@@ -288,7 +288,7 @@ class AppTheme {
         ),
       ),
       
-      textTheme: TextTheme(
+      textTheme: const TextTheme(
         // Display styles - Bold (Somar Bold)
         displayLarge: TextStyle(
           fontFamily: fontFamily,
@@ -398,7 +398,7 @@ class AppTheme {
       chipTheme: ChipThemeData(
         backgroundColor: AppColors.cardLight,
         selectedColor: AppColors.primaryLight,
-        labelStyle: TextStyle(
+        labelStyle: const TextStyle(
           fontFamily: fontFamily,
           color: AppColors.textSecondaryLight,
           fontSize: 13,
@@ -410,7 +410,7 @@ class AppTheme {
         ),
       ),
       
-      dividerTheme: DividerThemeData(
+      dividerTheme: const DividerThemeData(
         color: AppColors.dividerLight,
         thickness: 1,
         space: 16,

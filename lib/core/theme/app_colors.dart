@@ -39,23 +39,4 @@ class AppColors {
   // Divider
   static const Color dividerDark = Color(0xFF2E2E2E);
   static const Color dividerLight = Color(0xFFE0E0E0);
-  
-  // Gradients (minimal use only)
-  static const LinearGradient primaryGradient = LinearGradient(
-    colors: [primaryDark, secondaryDark],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
-  
-  static const LinearGradient successGradient = LinearGradient(
-    colors: [success, Color(0xFF66BB6A)],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
-  
-  static const LinearGradient errorGradient = LinearGradient(
-    colors: [error, Color(0xFFE57373)],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
 }

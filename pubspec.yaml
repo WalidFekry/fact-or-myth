@@ -1,7 +1,7 @@
-name: haqeeqa_wala_khorafa
-description: Arabic quiz app - حقيقة ولا خرافة؟
+name: fact_or_myth
+description: Quiz App - حقيقة ولا خرافة؟
 publish_to: 'none'
-version: 1.0.0+1
+version: 1.0.0+2
 
 environment:
   sdk: '>=3.0.0 <4.0.0'

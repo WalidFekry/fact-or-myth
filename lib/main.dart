@@ -1,11 +1,11 @@
 import 'dart:async';
+import 'package:fact_or_myth/viewmodels/auth_viewmodel.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:haqeeqa_wala_khorafa/viewmodels/auth_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'core/di/service_locator.dart';
