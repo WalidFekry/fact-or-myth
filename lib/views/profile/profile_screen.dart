@@ -13,8 +13,15 @@ import '../../widgets/custom_app_bar.dart';
 import '../onboarding/onboarding_screen.dart';
 import 'edit_profile_screen.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  bool _isDeleting = false;
 
   @override
   Widget build(BuildContext context) {
@@ -239,6 +246,7 @@ class ProfileScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         ListTile(
+                          enabled: !_isDeleting,
                           contentPadding: const EdgeInsets.symmetric(
                             horizontal: 16,
                             vertical: 4,
@@ -247,32 +255,43 @@ class ProfileScreen extends StatelessWidget {
                             width: 40,
                             height: 40,
                             decoration: BoxDecoration(
-                              color: AppColors.error.withOpacity(0.1),
+                              color: AppColors.error.withOpacity(_isDeleting ? 0.05 : 0.1),
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: const Icon(
-                              Icons.delete_forever_rounded,
-                              color: AppColors.error,
-                              size: 20,
-                            ),
+                            child: _isDeleting
+                                ? const SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: Center(
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        valueColor: AlwaysStoppedAnimation<Color>(AppColors.error),
+                                      ),
+                                    ),
+                                  )
+                                : const Icon(
+                                    Icons.delete_forever_rounded,
+                                    color: AppColors.error,
+                                    size: 20,
+                                  ),
                           ),
                           title: Text(
                             'حذف الحساب',
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                   fontWeight: FontWeight.w600,
-                                  color: AppColors.error,
+                                  color: _isDeleting ? AppColors.error.withOpacity(0.5) : AppColors.error,
                                 ),
                           ),
                           subtitle: Text(
-                            'حذف نهائي لجميع بياناتك',
+                            _isDeleting ? 'جاري الحذف...' : 'حذف نهائي لجميع بياناتك',
                             style: Theme.of(context).textTheme.bodySmall,
                           ),
-                          trailing: const Icon(
+                          trailing: Icon(
                             Icons.arrow_forward_ios_rounded,
                             size: 16,
-                            color: AppColors.textSecondaryDark,
+                            color: _isDeleting ? AppColors.textSecondaryDark.withOpacity(0.5) : AppColors.textSecondaryDark,
                           ),
-                          onTap: () => _showDeleteAccountDialog(context),
+                          onTap: _isDeleting ? null : () => _showDeleteAccountDialog(context),
                         ),
                         const Divider(height: 1, indent: 72, endIndent: 16),
                         ListTile(
@@ -397,13 +416,15 @@ class ProfileScreen extends StatelessWidget {
       ),
     );
   }
-}
 
 
   void _showDeleteAccountDialog(BuildContext context) {
+    // Prevent showing dialog if already deleting
+    if (_isDeleting) return;
+    
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         backgroundColor: AppColors.surfaceDark,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
@@ -430,13 +451,13 @@ class ProfileScreen extends StatelessWidget {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(dialogContext),
             child: const Text('إلغاء'),
           ),
           ElevatedButton(
             onPressed: () {
-              Navigator.pop(context);
-              _deleteAccount(context);
+              Navigator.pop(dialogContext);
+              _deleteAccount();
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.error,
@@ -448,18 +469,33 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Future<void> _deleteAccount(BuildContext context) async {
+  Future<void> _deleteAccount() async {
+    // Prevent double-click
+    if (_isDeleting) return;
+    
+    setState(() {
+      _isDeleting = true;
+    });
+    
     final authVM = context.read<AuthViewModel>();
     final userId = authVM.getUserId();
     
-    if (userId == null) return;
+    if (userId == null) {
+      setState(() {
+        _isDeleting = false;
+      });
+      return;
+    }
     
-    // Show loading
+    // Show loading dialog
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => const Center(
-        child: CircularProgressIndicator(),
+      builder: (loadingContext) => WillPopScope(
+        onWillPop: () async => false,
+        child: const Center(
+          child: CircularProgressIndicator(),
+        ),
       ),
     );
     
@@ -467,34 +503,47 @@ class ProfileScreen extends StatelessWidget {
       final apiService = getIt<ApiService>();
       await apiService.deleteAccount(userId);
       
-      // Close loading immediately on success
-      if (context.mounted) Navigator.pop(context);
+      // SUCCESS: Close loading dialog
+      if (mounted) {
+        Navigator.of(context, rootNavigator: true).pop();
+      }
       
-      // Clear local data and logout
+      // Clear local data
       await authVM.logout();
       
-      // Navigate to onboarding
-      if (context.mounted) {
-        Navigator.of(context).pushAndRemoveUntil(
+      // Navigate to onboarding (remove all routes)
+      if (mounted) {
+        await Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (_) => const OnboardingScreen()),
           (route) => false,
         );
         
-        // Show success message
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('تم حذف الحساب بنجاح'),
-            backgroundColor: AppColors.success,
-            duration: Duration(seconds: 2),
-          ),
-        );
+        // Show success message after navigation
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('تم حذف الحساب بنجاح'),
+              backgroundColor: AppColors.success,
+              duration: Duration(seconds: 2),
+            ),
+          );
+        }
       }
     } catch (e) {
-      // Close loading immediately on error
-      if (context.mounted) Navigator.pop(context);
+      // ERROR: Close loading dialog
+      if (mounted) {
+        Navigator.of(context, rootNavigator: true).pop();
+      }
+      
+      // Reset deleting state
+      if (mounted) {
+        setState(() {
+          _isDeleting = false;
+        });
+      }
       
       // Show error message
-      if (context.mounted) {
+      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('حدث خطأ: ${e.toString()}'),
@@ -567,3 +616,5 @@ class ProfileScreen extends StatelessWidget {
       );
     }
   }
+
+}
