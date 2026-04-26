@@ -1,5 +1,8 @@
+import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:haqeeqa_wala_khorafa/viewmodels/auth_viewmodel.dart';
@@ -22,30 +25,65 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  // Run app in error zone to catch all errors
+  runZonedGuarded<Future<void>>(() async {
+    WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Firebase
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+    // Initialize Firebase
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
 
-  // TASK 2: Register background message handler
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    // TASK 1: Initialize Firebase Crashlytics
+    // Only enable Crashlytics in release mode
+    if (kReleaseMode) {
+      // Pass all uncaught Flutter errors to Crashlytics
+      FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+      
+      // Pass all uncaught asynchronous errors to Crashlytics
+      PlatformDispatcher.instance.onError = (error, stack) {
+        FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+        return true;
+      };
+    } else {
+      // In debug mode, print errors to console
+      FlutterError.onError = (FlutterErrorDetails details) {
+        FlutterError.presentError(details);
+        if (kDebugMode) {
+          print('Flutter Error: ${details.exception}');
+          print('Stack trace: ${details.stack}');
+        }
+      };
+    }
 
-  // Setup dependency injection
-  await setupServiceLocator();
+    // TASK 2: Register background message handler
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-  // TASK 2: Initialize notification service
-  final notificationService = getIt<NotificationService>();
-  await notificationService.initialize();
-  
-  // Set preferred orientations
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
-  
-  runApp(const MyApp());
+    // Setup dependency injection
+    await setupServiceLocator();
+
+    // TASK 2: Initialize notification service
+    final notificationService = getIt<NotificationService>();
+    await notificationService.initialize();
+    
+    // Set preferred orientations
+    await SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    
+    runApp(const MyApp());
+  }, (error, stack) {
+    // Catch errors that occur outside of Flutter framework
+    if (kReleaseMode) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    } else {
+      if (kDebugMode) {
+        print('Async Error: $error');
+        print('Stack trace: $stack');
+      }
+    }
+  });
 }
 
 class MyApp extends StatelessWidget {
