@@ -201,4 +201,45 @@ class StorageService {
     final answerData = getDailyQuestionAnswer();
     return answerData != null && answerData['answered'] == true;
   }
+
+  // TASK 1: Clear ALL user-related data (for logout/delete account)
+  Future<void> clearAllUserData() async {
+    // Clear user session
+    await clearUser();
+    
+    // Clear daily question cache
+    await clearDailyQuestionCache();
+    
+    // Clear daily question answer
+    await clearDailyQuestionAnswer();
+    
+    // Clear guest answer (legacy)
+    await clearGuestAnswer();
+    
+    // Clear any other user-specific data
+    await _prefs.remove('onboarding_completed');
+    
+    // Note: We keep theme preference and sound preference
+    // as they are user preferences, not session data
+  }
+
+  // TASK 1: Clear only session data (keep preferences like theme, sound)
+  Future<void> clearSessionData() async {
+    // Clear user session
+    await clearUser();
+    
+    // Clear daily question cache
+    await clearDailyQuestionCache();
+    
+    // Clear daily question answer
+    await clearDailyQuestionAnswer();
+    
+    // Clear guest answer (legacy)
+    await clearGuestAnswer();
+  }
+
+  // TASK 1: Nuclear option - clear EVERYTHING (for testing/debugging)
+  Future<void> clearEverything() async {
+    await _prefs.clear();
+  }
 }

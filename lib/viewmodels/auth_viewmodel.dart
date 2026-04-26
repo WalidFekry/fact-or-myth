@@ -54,8 +54,18 @@ class AuthViewModel extends ChangeNotifier {
   }
 
   Future<void> logout() async {
+    // TASK 1 & 2: Clear all session data and reset state
     await _authRepository.logout();
     _user = null;
+    _error = null;
+    notifyListeners();
+  }
+
+  // TASK 1: Clear everything on account deletion
+  Future<void> deleteAccountData() async {
+    await _authRepository.clearAccountData();
+    _user = null;
+    _error = null;
     notifyListeners();
   }
 

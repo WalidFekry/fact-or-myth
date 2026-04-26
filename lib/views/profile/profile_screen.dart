@@ -532,10 +532,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         Navigator.of(context, rootNavigator: true).pop();
       }
       
-      // Clear local data
-      await authVM.logout();
+      // TASK 1: Clear ALL local data (including cache)
+      await authVM.deleteAccountData();
       
-      // Navigate to onboarding (remove all routes)
+      // TASK 3: Navigate to onboarding (remove all routes)
       if (mounted) {
         await Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (_) => const OnboardingScreen()),
@@ -623,9 +623,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _logout(BuildContext context) async {
     final authVM = context.read<AuthViewModel>();
+    
+    // TASK 1: Clear all session data
     await authVM.logout();
     
     if (context.mounted) {
+      // TASK 3: Navigate to onboarding with complete reset
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => const OnboardingScreen()),
         (route) => false,

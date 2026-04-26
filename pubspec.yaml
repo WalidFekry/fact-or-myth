@@ -51,3 +51,13 @@ flutter:
   assets:
     - assets/icons/
     - assets/sounds/
+  
+  fonts:
+    - family: Somar
+      fonts:
+        - asset: assets/fonts/Somar-Regular.otf
+          weight: 400
+        - asset: assets/fonts/Somar-Medium.otf
+          weight: 500
+        - asset: assets/fonts/Somar-Bold.otf
+          weight: 700

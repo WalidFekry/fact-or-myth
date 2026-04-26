@@ -52,6 +52,12 @@ class AuthRepository {
   }
 
   Future<void> logout() async {
-    await _storageService.clearUser();
+    // TASK 1: Clear ALL session data on logout
+    await _storageService.clearSessionData();
+  }
+
+  // TASK 1: Clear everything on account deletion
+  Future<void> clearAccountData() async {
+    await _storageService.clearAllUserData();
   }
 }

@@ -3,6 +3,9 @@ import 'package:flutter/services.dart';
 import 'app_colors.dart';
 
 class AppTheme {
+  // Somar Font Family - Applied Globally
+  static const String fontFamily = 'Somar';
+  
   // Clean Dark Theme (Default)
   static ThemeData get darkTheme {
     return ThemeData(
@@ -10,6 +13,7 @@ class AppTheme {
       brightness: Brightness.dark,
       primaryColor: AppColors.primaryDark,
       scaffoldBackgroundColor: AppColors.backgroundDark,
+      fontFamily: fontFamily, // Global Somar font
       
       colorScheme: ColorScheme.dark(
         primary: AppColors.primaryDark,
@@ -29,9 +33,10 @@ class AppTheme {
         systemOverlayStyle: SystemUiOverlayStyle.light,
         iconTheme: IconThemeData(color: AppColors.textPrimaryDark, size: 22),
         titleTextStyle: TextStyle(
+          fontFamily: fontFamily,
           color: AppColors.textPrimaryDark,
           fontSize: 18,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w600, // Somar Medium
         ),
       ),
       
@@ -54,8 +59,9 @@ class AppTheme {
             borderRadius: BorderRadius.circular(10),
           ),
           textStyle: const TextStyle(
+            fontFamily: fontFamily,
             fontSize: 15,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w600, // Somar Medium
           ),
         ),
       ),
@@ -69,48 +75,117 @@ class AppTheme {
             borderRadius: BorderRadius.circular(10),
           ),
           textStyle: const TextStyle(
+            fontFamily: fontFamily,
             fontSize: 15,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w600, // Somar Medium
           ),
         ),
       ),
       
       textTheme: TextTheme(
-        // Compact, professional typography
+        // Display styles - Bold (Somar Bold)
         displayLarge: TextStyle(
+          fontFamily: fontFamily,
           fontSize: 24,
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w700, // Somar Bold
           color: AppColors.textPrimaryDark,
           height: 1.2,
         ),
         displayMedium: TextStyle(
+          fontFamily: fontFamily,
           fontSize: 20,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w600, // Somar Medium
           color: AppColors.textPrimaryDark,
           height: 1.3,
         ),
         displaySmall: TextStyle(
+          fontFamily: fontFamily,
           fontSize: 18,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w600, // Somar Medium
           color: AppColors.textPrimaryDark,
         ),
+        
+        // Headline styles - Medium (Somar Medium)
+        headlineLarge: TextStyle(
+          fontFamily: fontFamily,
+          fontSize: 22,
+          fontWeight: FontWeight.w600, // Somar Medium
+          color: AppColors.textPrimaryDark,
+        ),
+        headlineMedium: TextStyle(
+          fontFamily: fontFamily,
+          fontSize: 18,
+          fontWeight: FontWeight.w600, // Somar Medium
+          color: AppColors.textPrimaryDark,
+        ),
+        headlineSmall: TextStyle(
+          fontFamily: fontFamily,
+          fontSize: 16,
+          fontWeight: FontWeight.w500, // Somar Medium
+          color: AppColors.textPrimaryDark,
+        ),
+        
+        // Title styles - Medium (Somar Medium)
+        titleLarge: TextStyle(
+          fontFamily: fontFamily,
+          fontSize: 18,
+          fontWeight: FontWeight.w600, // Somar Medium
+          color: AppColors.textPrimaryDark,
+        ),
+        titleMedium: TextStyle(
+          fontFamily: fontFamily,
+          fontSize: 16,
+          fontWeight: FontWeight.w500, // Somar Medium
+          color: AppColors.textPrimaryDark,
+        ),
+        titleSmall: TextStyle(
+          fontFamily: fontFamily,
+          fontSize: 14,
+          fontWeight: FontWeight.w500, // Somar Medium
+          color: AppColors.textPrimaryDark,
+        ),
+        
+        // Body styles - Regular (Somar Regular)
         bodyLarge: TextStyle(
+          fontFamily: fontFamily,
           fontSize: 15,
-          fontWeight: FontWeight.w400,
+          fontWeight: FontWeight.w400, // Somar Regular
           color: AppColors.textPrimaryDark,
           height: 1.5,
         ),
         bodyMedium: TextStyle(
+          fontFamily: fontFamily,
           fontSize: 14,
-          fontWeight: FontWeight.w400,
+          fontWeight: FontWeight.w400, // Somar Regular
           color: AppColors.textSecondaryDark,
           height: 1.4,
         ),
         bodySmall: TextStyle(
+          fontFamily: fontFamily,
           fontSize: 12,
-          fontWeight: FontWeight.w400,
+          fontWeight: FontWeight.w400, // Somar Regular
           color: AppColors.textTertiaryDark,
           height: 1.3,
+        ),
+        
+        // Label styles - Medium (Somar Medium)
+        labelLarge: TextStyle(
+          fontFamily: fontFamily,
+          fontSize: 14,
+          fontWeight: FontWeight.w500, // Somar Medium
+          color: AppColors.textPrimaryDark,
+        ),
+        labelMedium: TextStyle(
+          fontFamily: fontFamily,
+          fontSize: 12,
+          fontWeight: FontWeight.w500, // Somar Medium
+          color: AppColors.textSecondaryDark,
+        ),
+        labelSmall: TextStyle(
+          fontFamily: fontFamily,
+          fontSize: 11,
+          fontWeight: FontWeight.w400, // Somar Regular
+          color: AppColors.textTertiaryDark,
         ),
       ),
       
@@ -118,9 +193,10 @@ class AppTheme {
         backgroundColor: AppColors.cardDark,
         selectedColor: AppColors.primaryDark,
         labelStyle: TextStyle(
+          fontFamily: fontFamily,
           color: AppColors.textSecondaryDark,
           fontSize: 13,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w500, // Somar Medium
         ),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         shape: RoundedRectangleBorder(
@@ -143,6 +219,7 @@ class AppTheme {
       brightness: Brightness.light,
       primaryColor: AppColors.primaryLight,
       scaffoldBackgroundColor: AppColors.backgroundLight,
+      fontFamily: fontFamily, // Global Somar font
       
       colorScheme: ColorScheme.light(
         primary: AppColors.primaryLight,
@@ -162,9 +239,10 @@ class AppTheme {
         systemOverlayStyle: SystemUiOverlayStyle.dark,
         iconTheme: IconThemeData(color: AppColors.textPrimaryLight, size: 22),
         titleTextStyle: TextStyle(
+          fontFamily: fontFamily,
           color: AppColors.textPrimaryLight,
           fontSize: 18,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w600, // Somar Medium
         ),
       ),
       
@@ -187,8 +265,9 @@ class AppTheme {
             borderRadius: BorderRadius.circular(10),
           ),
           textStyle: const TextStyle(
+            fontFamily: fontFamily,
             fontSize: 15,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w600, // Somar Medium
           ),
         ),
       ),
@@ -202,47 +281,117 @@ class AppTheme {
             borderRadius: BorderRadius.circular(10),
           ),
           textStyle: const TextStyle(
+            fontFamily: fontFamily,
             fontSize: 15,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w600, // Somar Medium
           ),
         ),
       ),
       
       textTheme: TextTheme(
+        // Display styles - Bold (Somar Bold)
         displayLarge: TextStyle(
+          fontFamily: fontFamily,
           fontSize: 24,
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w700, // Somar Bold
           color: AppColors.textPrimaryLight,
           height: 1.2,
         ),
         displayMedium: TextStyle(
+          fontFamily: fontFamily,
           fontSize: 20,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w600, // Somar Medium
           color: AppColors.textPrimaryLight,
           height: 1.3,
         ),
         displaySmall: TextStyle(
+          fontFamily: fontFamily,
           fontSize: 18,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w600, // Somar Medium
           color: AppColors.textPrimaryLight,
         ),
+        
+        // Headline styles - Medium (Somar Medium)
+        headlineLarge: TextStyle(
+          fontFamily: fontFamily,
+          fontSize: 22,
+          fontWeight: FontWeight.w600, // Somar Medium
+          color: AppColors.textPrimaryLight,
+        ),
+        headlineMedium: TextStyle(
+          fontFamily: fontFamily,
+          fontSize: 18,
+          fontWeight: FontWeight.w600, // Somar Medium
+          color: AppColors.textPrimaryLight,
+        ),
+        headlineSmall: TextStyle(
+          fontFamily: fontFamily,
+          fontSize: 16,
+          fontWeight: FontWeight.w500, // Somar Medium
+          color: AppColors.textPrimaryLight,
+        ),
+        
+        // Title styles - Medium (Somar Medium)
+        titleLarge: TextStyle(
+          fontFamily: fontFamily,
+          fontSize: 18,
+          fontWeight: FontWeight.w600, // Somar Medium
+          color: AppColors.textPrimaryLight,
+        ),
+        titleMedium: TextStyle(
+          fontFamily: fontFamily,
+          fontSize: 16,
+          fontWeight: FontWeight.w500, // Somar Medium
+          color: AppColors.textPrimaryLight,
+        ),
+        titleSmall: TextStyle(
+          fontFamily: fontFamily,
+          fontSize: 14,
+          fontWeight: FontWeight.w500, // Somar Medium
+          color: AppColors.textPrimaryLight,
+        ),
+        
+        // Body styles - Regular (Somar Regular)
         bodyLarge: TextStyle(
+          fontFamily: fontFamily,
           fontSize: 15,
-          fontWeight: FontWeight.w400,
+          fontWeight: FontWeight.w400, // Somar Regular
           color: AppColors.textPrimaryLight,
           height: 1.5,
         ),
         bodyMedium: TextStyle(
+          fontFamily: fontFamily,
           fontSize: 14,
-          fontWeight: FontWeight.w400,
+          fontWeight: FontWeight.w400, // Somar Regular
           color: AppColors.textSecondaryLight,
           height: 1.4,
         ),
         bodySmall: TextStyle(
+          fontFamily: fontFamily,
           fontSize: 12,
-          fontWeight: FontWeight.w400,
+          fontWeight: FontWeight.w400, // Somar Regular
           color: AppColors.textTertiaryLight,
           height: 1.3,
+        ),
+        
+        // Label styles - Medium (Somar Medium)
+        labelLarge: TextStyle(
+          fontFamily: fontFamily,
+          fontSize: 14,
+          fontWeight: FontWeight.w500, // Somar Medium
+          color: AppColors.textPrimaryLight,
+        ),
+        labelMedium: TextStyle(
+          fontFamily: fontFamily,
+          fontSize: 12,
+          fontWeight: FontWeight.w500, // Somar Medium
+          color: AppColors.textSecondaryLight,
+        ),
+        labelSmall: TextStyle(
+          fontFamily: fontFamily,
+          fontSize: 11,
+          fontWeight: FontWeight.w400, // Somar Regular
+          color: AppColors.textTertiaryLight,
         ),
       ),
       
@@ -250,9 +399,10 @@ class AppTheme {
         backgroundColor: AppColors.cardLight,
         selectedColor: AppColors.primaryLight,
         labelStyle: TextStyle(
+          fontFamily: fontFamily,
           color: AppColors.textSecondaryLight,
           fontSize: 13,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w500, // Somar Medium
         ),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         shape: RoundedRectangleBorder(

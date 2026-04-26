@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../core/theme/app_colors.dart';
-import '../views/auth/register_screen.dart';
+import 'register_dialog.dart';
 
 /// TASK 5: Modern Login Required Dialog
 Future<bool?> showLoginRequiredDialog(
@@ -88,15 +88,16 @@ Future<bool?> showLoginRequiredDialog(
                   child: ElevatedButton(
                     onPressed: () async {
                       Navigator.pop(context);
-                      final result = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const RegisterScreen(),
+                      await showDialog(
+                        context: context,
+                        builder: (_) => RegisterDialog(
+                          onRegistered: () {
+                            if (context.mounted) {
+                              Navigator.pop(context, true);
+                            }
+                          },
                         ),
                       );
-                      if (context.mounted) {
-                        Navigator.pop(context, result == true);
-                      }
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 14),
