@@ -502,6 +502,57 @@ class FreeQuestionsScreen extends StatelessWidget {
                             fontSize: 16,
                           ),
                     ),
+                    const Spacer(),
+                    // TASK 1: Share Button
+                    IconButton(
+                      icon: const Icon(Icons.share_rounded, size: 20),
+                      onPressed: () {
+                        ShareUtils.shareQuestionContent(
+                          questionText: vm.question!.question,
+                          correctAnswer: vm.question!.correctAnswer,
+                          explanation: vm.question!.explanation,
+                        );
+                      },
+                      tooltip: 'مشاركة',
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                      style: IconButton.styleFrom(
+                        backgroundColor: AppColors.primaryDark.withOpacity(0.1),
+                        padding: const EdgeInsets.all(8),
+                        minimumSize: const Size(32, 32),
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    // TASK 1: Copy Button
+                    IconButton(
+                      icon: const Icon(Icons.copy_rounded, size: 18),
+                      onPressed: () async {
+                        await ShareUtils.copyQuestionContent(
+                          questionText: vm.question!.question,
+                          correctAnswer: vm.question!.correctAnswer,
+                          explanation: vm.question!.explanation,
+                        );
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('تم نسخ السؤال ✓'),
+                              duration: Duration(seconds: 2),
+                              backgroundColor: AppColors.success,
+                            ),
+                          );
+                        }
+                      },
+                      tooltip: 'نسخ',
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                      style: IconButton.styleFrom(
+                        backgroundColor: AppColors.primaryDark.withOpacity(0.1),
+                        padding: const EdgeInsets.all(8),
+                        minimumSize: const Size(32, 32),
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 12),
