@@ -72,4 +72,23 @@ class AppConstants {
   static const String msgNextQuestion = 'السؤال الجديد بعد:';
   static const String msgNewQuestion = 'سؤال جديد';
   static const String msgLoginRequired = 'يجب تسجيل الدخول أولاً';
+
+  // Smart feedback messages
+  static final List<String> correctMessages = [
+    'دي فعلًا حقيقة 👌',
+    'إجابتك صح.. دي حقيقة 100% 🔥',
+    'معلومة مظبوطة ✔️ دي حقيقة',
+    'تحليل ممتاز 👀 دي حقيقة فعلًا',
+    'أيوه كده 💪 دي حقيقة مش خرافة',
+    'واضح إنك مركز 👀',
+  ];
+
+  static final List<String> wrongMessages = [
+    'دي خرافة مش حقيقة ❌',
+    'المعلومة دي للأسف خرافة 😅',
+    'ناس كتير بتقع فيها 👀 دي خرافة',
+    'شكلها مقنعة بس دي خرافة 🤷‍♂️',
+    'مش صح.. دي خرافة 💡',
+    'خد بالك المرة الجاية 👌 دي خرافة',
+  ];
 }

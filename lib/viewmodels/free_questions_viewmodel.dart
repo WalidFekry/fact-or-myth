@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
+import '../core/constants/app_constants.dart';
 import '../data/models/cached_question_model.dart';
 import '../data/repositories/question_repository.dart';
 import '../data/services/network_service.dart';
@@ -8,25 +9,6 @@ class FreeQuestionsViewModel extends ChangeNotifier {
   final QuestionRepository _questionRepository;
   final NetworkService _networkService;
   final Random _random = Random();
-
-  // Smart feedback messages
-  final List<String> _correctMessages = [
-    'جامد 🔥',
-    'واضح إنك مركز 👀',
-    'إجابة قوية 💪',
-    'كده تمام جدًا 🚀',
-    'ممتاز! استمر 🌟',
-    'رائع جدًا 🎯',
-  ];
-
-  final List<String> _wrongMessages = [
-    'دي كانت tricky 😅',
-    'مش مشكلة، المعلومة دي بتتلخبط كتير',
-    'قريبة جدًا 👀',
-    'هتتعلمها مع الوقت 💪',
-    'مش لوحدك في دي 🤝',
-    'المرة الجاية أحسن 💫',
-  ];
 
   bool _isLoading = false;
   String? _error;
@@ -73,8 +55,8 @@ class FreeQuestionsViewModel extends ChangeNotifier {
     if (_userAnswer == null || _question == null) return null;
     final isCorrect = _userAnswer == _question!.correctAnswer;
     return isCorrect 
-        ? _getRandomMessage(_correctMessages)
-        : _getRandomMessage(_wrongMessages);
+        ? _getRandomMessage(AppConstants.correctMessages)
+        : _getRandomMessage(AppConstants.wrongMessages);
   }
 
   Future<void> _checkConnectivity() async {

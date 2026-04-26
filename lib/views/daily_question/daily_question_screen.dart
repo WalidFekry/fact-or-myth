@@ -82,7 +82,7 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
                 ),
               ),
               const SizedBox(width: 10),
-              const Text('التحدي اليومي'),
+              const Text('حقيقة ولا خرافة؟'),
             ],
           ),
           actions: [
@@ -160,7 +160,7 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
                 color: AppColors.primaryDark.withOpacity(0.1),
                 shape: BoxShape.circle,
               ),
-              child: Icon(
+              child: const Icon(
                 Icons.quiz_rounded,
                 size: 40,
                 color: AppColors.primaryDark,
@@ -191,24 +191,23 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
           // Dynamic Greeting (only show before answering)
           if (!vm.hasAnswered) ...[
             _buildGreetingSection(context),
-            const SizedBox(height: 16),
-          ],
-
-          // Countdown Timer at Top (if answered)
-          if (vm.hasAnswered && vm.nextQuestionTime != null) ...[
-            CountdownTimer(targetTime: vm.nextQuestionTime!),
-            const SizedBox(height: 16),
+            const SizedBox(height: 14),
           ],
 
           // Question Card
           _buildQuestionCard(context, vm),
-          const SizedBox(height: 20),
+          const SizedBox(height: 14),
 
           // Answer Buttons or Result
           if (!vm.hasAnswered)
             _buildAnswerButtons(vm)
           else
             _buildResultSection(context, vm),
+          // Countdown Timer if answered)
+          if (vm.nextQuestionTime != null) ...[
+            const SizedBox(height: 14),
+            CountdownTimer(targetTime: vm.nextQuestionTime!),
+          ],
         ],
       ),
     );
@@ -277,7 +276,7 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
                 color: AppColors.primaryDark.withOpacity(0.1),
                 shape: BoxShape.circle,
               ),
-              child: Icon(
+              child: const Icon(
                 Icons.help_rounded,
                 color: AppColors.primaryDark,
                 size: 24,
@@ -345,7 +344,7 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(
+                const SizedBox(
                   width: 20,
                   height: 20,
                   child: CircularProgressIndicator(
@@ -430,7 +429,7 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
                     padding: const EdgeInsets.all(16),
                     child: Column(
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.person_add_rounded,
                           color: AppColors.primaryDark,
                           size: 32,
@@ -458,12 +457,11 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
               );
             }
 
-            // TASK 4: Modern Comments Button
             return _buildModernActionButton(
               context,
               icon: Icons.comment_rounded,
               label: 'التعليقات',
-              color: AppColors.secondaryDark,
+              color: AppColors.primaryDark,
               onTap: () {
                 Navigator.push(
                   context,
@@ -506,22 +504,6 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
                 ),
               ),
             ),
-            // Share Button
-            IconButton(
-              icon: const Icon(Icons.share_rounded, color: AppColors.pureWhite, size: 20),
-              onPressed: () {
-                if (vm.question != null) {
-                  ShareUtils.shareResult(
-                    questionText: vm.question!.question,
-                    correctAnswer: vm.question!.correctAnswer,
-                    explanation: vm.question!.explanation,
-                    userAnswer: vm.userAnswer!,
-                    isCorrect: isCorrect,
-                  );
-                }
-              },
-              tooltip: 'مشاركة',
-            ),
           ],
         ),
       ),
@@ -543,7 +525,7 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
                     color: AppColors.primaryDark.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.lightbulb_rounded,
                     color: AppColors.primaryDark,
                     size: 18,
@@ -580,7 +562,6 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
                         correctAnswer: vm.question!.correctAnswer,
                         explanation: vm.question!.explanation,
                         userAnswer: vm.userAnswer!,
-                        isCorrect: vm.isCorrect!,
                       );
                     },
                   ),
@@ -592,7 +573,7 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
                     icon: Icons.content_copy_rounded,
                     label: 'نسخ',
                     onTap: () {
-                      _copyToClipboard(context, vm);
+                      ShareUtils.copyQuestionContent(context: context,questionText:vm.question!.question ,correctAnswer:vm.question!.correctAnswer ,explanation: vm.question!.explanation);
                     },
                   ),
                 ),
@@ -625,7 +606,7 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
               const SizedBox(width: 8),
               Text(
                 label,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                   color: AppColors.primaryDark,
@@ -638,66 +619,70 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
     );
   }
 
-  void _copyToClipboard(BuildContext context, DailyQuestionViewModel vm) {
-    final content = '''
-🧠 حقيقة ولا خرافة؟
-
-${vm.question!.question}
-
-الإجابة: ${vm.question!.correctAnswer ? 'حقيقة ✓' : 'خرافة ✗'}
-
-التفسير:
-${vm.question!.explanation}
-
-جرب التطبيق الآن!
-''';
-    
-    Clipboard.setData(ClipboardData(text: content));
-    
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('تم النسخ ✓'),
-        backgroundColor: AppColors.success,
-        duration: Duration(seconds: 2),
-      ),
-    );
-  }
-
   Widget _buildModernActionButton(
-    BuildContext context, {
-    required IconData icon,
-    required String label,
-    required Color color,
-    required VoidCallback onTap,
-  }) {
-    return Material(
-      color: color,
-      borderRadius: BorderRadius.circular(12),
-      elevation: 2,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+      BuildContext context, {
+        required IconData icon,
+        required String label,
+        required Color color,
+        required VoidCallback onTap,
+      }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(20),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 30),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeInOut,
+          padding: const EdgeInsets.all(5),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            gradient: LinearGradient(
+              colors: [
+                color,
+                color.withOpacity(0.7),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: color.withOpacity(0.3),
+                blurRadius: 12,
+                offset: const Offset(0, 6),
+              ),
+            ],
+            border: Border.all(
+              color: Colors.white.withOpacity(0.2),
+            ),
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: AppColors.pureWhite.withOpacity(0.2),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(icon, color: AppColors.pureWhite, size: 20),
-              ),
-              const SizedBox(width: 12),
+              // Text
               Text(
                 label,
                 style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.pureWhite,
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  letterSpacing: 0.5,
+                ),
+              ),
+
+              const SizedBox(width: 14),
+
+              // Icon container
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.15),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  icon,
+                  color: Colors.white,
+                  size: 18,
                 ),
               ),
             ],

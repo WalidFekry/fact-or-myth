@@ -5,7 +5,7 @@ class CommentModel {
   final String userAvatar;
   final int questionId;
   final String comment;
-  final DateTime createdAt;
+  final String createdAt;
 
   CommentModel({
     required this.id,
@@ -25,7 +25,7 @@ class CommentModel {
       userAvatar: json['user_avatar'] ?? '👨',
       questionId: int.parse(json['question_id'].toString()),
       comment: json['comment'] ?? '',
-      createdAt: DateTime.parse(json['created_at']),
+      createdAt: json['created_at'],
     );
   }
 
@@ -37,7 +37,7 @@ class CommentModel {
       'user_avatar': userAvatar,
       'question_id': questionId,
       'comment': comment,
-      'created_at': createdAt.toIso8601String(),
+      'created_at': createdAt,
     };
   }
 }

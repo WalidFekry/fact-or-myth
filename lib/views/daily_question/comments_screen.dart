@@ -86,7 +86,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
                                           color: AppColors.primaryDark.withOpacity(0.1),
                                           shape: BoxShape.circle,
                                         ),
-                                        child: Icon(
+                                        child: const Icon(
                                           Icons.comment_rounded,
                                           size: 40,
                                           color: AppColors.primaryDark,
@@ -154,11 +154,6 @@ class _CommentsScreenState extends State<CommentsScreen> {
                                                     ),
                                                     const SizedBox(width: 6),
                                                     Text(
-                                                      '•',
-                                                      style: Theme.of(context).textTheme.bodySmall,
-                                                    ),
-                                                    const SizedBox(width: 6),
-                                                    Text(
                                                       comment.createdAt.toString(),
                                                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                                             fontSize: 12,
@@ -189,11 +184,11 @@ class _CommentsScreenState extends State<CommentsScreen> {
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.surface,
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
                         color: AppColors.overlayLight,
                         blurRadius: 4,
-                        offset: const Offset(0, -2),
+                        offset: Offset(0, -2),
                       ),
                     ],
                   ),
@@ -210,10 +205,10 @@ class _CommentsScreenState extends State<CommentsScreen> {
                               spacing: 8,
                               runSpacing: 8,
                               children: [
-                                _buildQuickReactionChip('❤️ إعجاب', vm),
-                                _buildQuickReactionChip('🔥 اتفق', vm),
-                                _buildQuickReactionChip('😂 ضحكني', vm),
-                                _buildQuickReactionChip('🤔 مثير للتفكير', vm),
+                                _buildQuickReactionChip('إعجاب ❤️', vm),
+                                _buildQuickReactionChip('اتفق 🔥', vm),
+                                _buildQuickReactionChip('ضحكني 😂', vm),
+                                _buildQuickReactionChip('مثير للتفكير 🤔', vm),
                               ],
                             ),
                           ),
@@ -227,14 +222,14 @@ class _CommentsScreenState extends State<CommentsScreen> {
                               color: AppColors.primaryDark.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child: Row(
+                            child: const Row(
                               children: [
                                 Icon(
                                   Icons.check_circle_rounded,
                                   size: 18,
                                   color: AppColors.primaryDark,
                                 ),
-                                const SizedBox(width: 8),
+                                SizedBox(width: 8),
                                 Expanded(
                                   child: Text(
                                     'لقد قمت بإضافة تعليق بالفعل على هذا السؤال',
@@ -260,7 +255,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
                             ),
                             child: Row(
                               children: [
-                                Icon(
+                                const Icon(
                                   Icons.error_outline_rounded,
                                   size: 16,
                                   color: AppColors.error,
@@ -269,7 +264,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
                                 Expanded(
                                   child: Text(
                                     vm.error!,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: AppColors.error,
                                       fontSize: 12,
                                     ),
@@ -357,7 +352,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
         ),
         child: Text(
           text,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w600,
             color: AppColors.primaryDark,

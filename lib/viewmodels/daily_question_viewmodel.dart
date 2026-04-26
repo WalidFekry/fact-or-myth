@@ -1,3 +1,4 @@
+import 'package:fact_or_myth/core/constants/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 import '../data/models/question_model.dart';
@@ -14,24 +15,7 @@ class DailyQuestionViewModel extends ChangeNotifier {
   final NetworkService _networkService;
   final Random _random = Random();
 
-  // Smart feedback messages
-  final List<String> _correctMessages = [
-    'جامد 🔥',
-    'واضح إنك مركز 👀',
-    'إجابة قوية 💪',
-    'كده تمام جدًا 🚀',
-    'ممتاز! استمر 🌟',
-    'رائع جدًا 🎯',
-  ];
 
-  final List<String> _wrongMessages = [
-    'دي كانت tricky 😅',
-    'مش مشكلة، المعلومة دي بتتلخبط كتير',
-    'قريبة جدًا 👀',
-    'هتتعلمها مع الوقت 💪',
-    'مش لوحدك في دي 🤝',
-    'المرة الجاية أحسن 💫',
-  ];
 
   bool _isLoading = false;
   String? _error;
@@ -97,8 +81,8 @@ class DailyQuestionViewModel extends ChangeNotifier {
         _isCorrect = localAnswer['is_correct'] as bool;
         _resultMessage = localAnswer['result_message'] as String? ?? 
             (_isCorrect! 
-                ? _getRandomMessage(_correctMessages)
-                : _getRandomMessage(_wrongMessages));
+                ? _getRandomMessage(AppConstants.correctMessages)
+                : _getRandomMessage(AppConstants.wrongMessages));
         
         // Update question with voting stats from local storage
         if (localAnswer['true_votes'] != null && localAnswer['false_votes'] != null) {
@@ -124,8 +108,8 @@ class DailyQuestionViewModel extends ChangeNotifier {
         _userAnswer = _question!.userAnswer;
         _isCorrect = _question!.isCorrect;
         _resultMessage = _isCorrect! 
-            ? _getRandomMessage(_correctMessages)
-            : _getRandomMessage(_wrongMessages);
+            ? _getRandomMessage(AppConstants.correctMessages)
+            : _getRandomMessage(AppConstants.wrongMessages);
         _calculateNextQuestionTime();
       } 
       // Legacy: Check guest answer persistence (old format)
@@ -137,8 +121,8 @@ class DailyQuestionViewModel extends ChangeNotifier {
           _userAnswer = guestAnswer['answer'];
           _isCorrect = guestAnswer['is_correct'];
           _resultMessage = _isCorrect! 
-              ? _getRandomMessage(_correctMessages)
-              : _getRandomMessage(_wrongMessages);
+              ? _getRandomMessage(AppConstants.correctMessages)
+              : _getRandomMessage(AppConstants.wrongMessages);
           _calculateNextQuestionTime();
         }
       }
@@ -211,8 +195,8 @@ class DailyQuestionViewModel extends ChangeNotifier {
       }
       
       _resultMessage = _isCorrect! 
-          ? _getRandomMessage(_correctMessages)
-          : _getRandomMessage(_wrongMessages);
+          ? _getRandomMessage(AppConstants.correctMessages)
+          : _getRandomMessage(AppConstants.wrongMessages);
       
       // Update voting statistics from response
       int trueVotes = _question!.trueVotes;
@@ -330,8 +314,8 @@ class DailyQuestionViewModel extends ChangeNotifier {
     _userAnswer = answer;
     _isCorrect = answer == _question!.correctAnswer;
     _resultMessage = _isCorrect! 
-        ? _getRandomMessage(_correctMessages)
-        : _getRandomMessage(_wrongMessages);
+        ? _getRandomMessage(AppConstants.correctMessages)
+        : _getRandomMessage(AppConstants.wrongMessages);
     
     // Save guest answer to local storage (legacy format for migration)
     final storageService = getIt<StorageService>();

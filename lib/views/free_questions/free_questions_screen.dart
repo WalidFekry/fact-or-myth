@@ -462,7 +462,6 @@ class FreeQuestionsScreen extends StatelessWidget {
                         correctAnswer: vm.question!.correctAnswer,
                         explanation: vm.question!.explanation,
                         userAnswer: vm.userAnswer!,
-                        isCorrect: vm.isCorrect!,
                       );
                     }
                   },
@@ -507,11 +506,11 @@ class FreeQuestionsScreen extends StatelessWidget {
                     IconButton(
                       icon: const Icon(Icons.share_rounded, size: 20),
                       onPressed: () {
-                        ShareUtils.shareQuestionContent(
-                          questionText: vm.question!.question,
-                          correctAnswer: vm.question!.correctAnswer,
-                          explanation: vm.question!.explanation,
-                        );
+                        // ShareUtils.shareQuestionContent(
+                        //   questionText: vm.question!.question,
+                        //   correctAnswer: vm.question!.correctAnswer,
+                        //   explanation: vm.question!.explanation,
+                        // );
                       },
                       tooltip: 'مشاركة',
                       padding: EdgeInsets.zero,
@@ -529,6 +528,7 @@ class FreeQuestionsScreen extends StatelessWidget {
                       icon: const Icon(Icons.copy_rounded, size: 18),
                       onPressed: () async {
                         await ShareUtils.copyQuestionContent(
+                          context: context,
                           questionText: vm.question!.question,
                           correctAnswer: vm.question!.correctAnswer,
                           explanation: vm.question!.explanation,
