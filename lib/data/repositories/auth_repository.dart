@@ -9,13 +9,29 @@ class AuthRepository {
   AuthRepository(this._apiService, this._storageService);
 
   Future<UserModel> register(String name, String avatar) async {
-    final response = await _apiService.post('/register', {
+    // Get guest answer data for migration
+    final guestAnswer = _storageService.getGuestAnswerForMigration();
+    
+    final requestData = <String, dynamic>{
       'name': name,
       'avatar': avatar,
-    });
+    };
+    
+    // Include guest answer if exists
+    if (guestAnswer != null) {
+      requestData['guest_answer'] = guestAnswer;
+    }
+    
+    final response = await _apiService.post('/register', requestData);
 
     final user = UserModel.fromJson(response['data']);
     await _storageService.saveUser(user.id, user.name, user.avatar);
+    
+    // Clear guest answer after successful registration
+    if (guestAnswer != null) {
+      await _storageService.clearGuestAnswer();
+    }
+    
     return user;
   }
 

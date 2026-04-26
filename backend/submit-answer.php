@@ -22,6 +22,17 @@ if (!array_key_exists('answer', $input)) {
 try {
     $db = getDB();
     
+    // TASK 2: Validate user if provided
+    if ($userId) {
+        $stmt = $db->prepare("SELECT id FROM users WHERE id = ?");
+        $stmt->execute([$userId]);
+        if (!$stmt->fetch()) {
+            // User not found - force logout
+            http_response_code(401);
+            sendError('المستخدم غير موجود', 401, ['force_logout' => true]);
+        }
+    }
+    
     // Get question
     $stmt = $db->prepare("SELECT correct_answer, is_daily FROM questions WHERE id = ?");
     $stmt->execute([$questionId]);
@@ -33,17 +44,31 @@ try {
     
     $isCorrect = ((bool)$answer === (bool)$question['correct_answer']) ? 1 : 0;
     
-    // Check if already answered (for daily questions with logged-in users)
+    // TASK 6: Check if already answered (for daily questions with logged-in users)
     if ($userId && $question['is_daily']) {
         $stmt = $db->prepare("
-            SELECT id FROM answers
+            SELECT id, answer, is_correct FROM answers
             WHERE user_id = ? AND question_id = ? AND DATE(created_at) = CURDATE()
         ");
         $stmt->execute([$userId, $questionId]);
-        if ($stmt->fetch()) {
-            // Return 409 Conflict for already answered
+        $existingAnswer = $stmt->fetch();
+        
+        if ($existingAnswer) {
+            // User already answered - return existing result instead of error
+            // Get current vote counts
+            $stmt = $db->prepare("SELECT true_votes, false_votes FROM questions WHERE id = ?");
+            $stmt->execute([$questionId]);
+            $votes = $stmt->fetch();
+            
+            // Return 409 Conflict with existing answer data
             http_response_code(409);
-            sendError('لقد أجبت على هذا السؤال اليوم');
+            sendError('لقد أجبت على هذا السؤال اليوم', 409, [
+                'is_correct' => (bool)$existingAnswer['is_correct'],
+                'correct_answer' => (bool)$question['correct_answer'],
+                'user_answer' => (bool)$existingAnswer['answer'],
+                'true_votes' => (int)$votes['true_votes'],
+                'false_votes' => (int)$votes['false_votes']
+            ]);
         }
     }
     

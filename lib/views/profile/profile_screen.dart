@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../core/constants/assets.dart';
 import '../../core/di/service_locator.dart';
 import '../../core/theme/app_colors.dart';
-import '../../core/constants/assets.dart';
 import '../../viewmodels/profile_viewmodel.dart';
-import '../../viewmodels/theme_viewmodel.dart';
 import '../../viewmodels/auth_viewmodel.dart';
 import '../../data/services/api_service.dart';
 import '../../data/services/sound_service.dart';
@@ -35,15 +34,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
           title: 'الملف الشخصي',
           showBack: false,
           actions: [
-            // Sound Toggle
+            // TASK 6: Sound Toggle in AppBar (LEFT side)
             Consumer<ProfileViewModel>(
               builder: (context, vm, _) {
                 if (vm.profile == null) return const SizedBox.shrink();
                 final soundService = getIt<SoundService>();
                 return IconButton(
                   icon: Icon(
-                    soundService.isSoundEnabled 
-                        ? Icons.volume_up_rounded 
+                    soundService.isSoundEnabled
+                        ? Icons.volume_up_rounded
                         : Icons.volume_off_rounded,
                     size: 22,
                   ),
@@ -53,8 +52,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
-                          soundService.isSoundEnabled 
-                              ? 'تم تفعيل الصوت 🔊' 
+                          soundService.isSoundEnabled
+                              ? 'تم تفعيل الصوت 🔊'
                               : 'تم إيقاف الصوت 🔇',
                         ),
                         duration: const Duration(seconds: 1),
@@ -63,22 +62,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     );
                   },
                   tooltip: soundService.isSoundEnabled ? 'إيقاف الصوت' : 'تفعيل الصوت',
-                );
-              },
-            ),
-            Consumer<ProfileViewModel>(
-              builder: (context, vm, _) {
-                if (vm.profile == null) return const SizedBox.shrink();
-                return IconButton(
-                  icon: const Icon(Icons.edit_rounded, size: 22),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => EditProfileScreen(profile: vm.profile!),
-                      ),
-                    ).then((_) => vm.loadProfile());
-                  },
                 );
               },
             ),
@@ -112,29 +95,70 @@ class _ProfileScreenState extends State<ProfileScreen> {
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
               child: Column(
                 children: [
-                  // Avatar & Name
-                  Container(
-                    width: 80,
-                    height: 80,
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryDark.withOpacity(0.1),
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: AppColors.primaryDark.withOpacity(0.3),
-                        width: 2,
+                  // Header Section: Avatar, Name, Edit Icon
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryDark.withOpacity(0.1),
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: AppColors.primaryDark.withOpacity(0.3),
+                            width: 2,
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            profile.avatar,
+                            style: const TextStyle(fontSize: 40),
+                          ),
+                        ),
                       ),
-                    ),
-                    child: Center(
-                      child: Text(
-                        profile.avatar,
-                        style: const TextStyle(fontSize: 40),
+                      const SizedBox(width: 12),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            profile.name,
+                            style: Theme.of(context).textTheme.displayMedium,
+                          ),
+                          const SizedBox(height: 4),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => EditProfileScreen(profile: profile),
+                                ),
+                              ).then((_) {
+                                final vm = context.read<ProfileViewModel>();
+                                vm.loadProfile();
+                              });
+                            },
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.edit_rounded,
+                                  size: 14,
+                                  color: AppColors.primaryDark,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  'تعديل الملف',
+                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                        color: AppColors.primaryDark,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    profile.name,
-                    style: Theme.of(context).textTheme.displayMedium,
+                    ],
                   ),
                   const SizedBox(height: 24),
 
@@ -237,38 +261,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ],
                       ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Settings Card
-                  Card(
-                    child: Column(
-                      children: [
-                        Consumer<ThemeViewModel>(
-                          builder: (context, themeVM, _) {
-                            return SwitchListTile(
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 4,
-                              ),
-                              title: Text(
-                                'الوضع الداكن',
-                                style: Theme.of(context).textTheme.bodyLarge,
-                              ),
-                              secondary: Icon(
-                                themeVM.isDarkMode
-                                    ? Icons.dark_mode_rounded
-                                    : Icons.light_mode_rounded,
-                                color: AppColors.primaryDark,
-                                size: 22,
-                              ),
-                              value: themeVM.isDarkMode,
-                              onChanged: (_) => themeVM.toggleTheme(),
-                            );
-                          },
-                        ),
-                      ],
                     ),
                   ),
                   const SizedBox(height: 16),

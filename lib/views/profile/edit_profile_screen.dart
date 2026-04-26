@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/di/service_locator.dart';
-import '../../core/constants/app_constants.dart';
 import '../../data/models/profile_model.dart';
 import '../../viewmodels/profile_viewmodel.dart';
 import '../../widgets/avatar_selector.dart';

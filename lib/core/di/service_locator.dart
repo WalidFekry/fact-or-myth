@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../core/network/api_client.dart';
 import '../../data/services/api_service.dart';
 import '../../data/services/storage_service.dart';
 import '../../data/services/network_service.dart';
@@ -30,11 +31,16 @@ Future<void> setupServiceLocator() async {
   await offlineStorage.init();
   getIt.registerSingleton<OfflineStorageService>(offlineStorage);
   
+  // Core Network
+  getIt.registerLazySingleton<ApiClient>(() => ApiClient());
+  
   // Services
   getIt.registerLazySingleton<StorageService>(
     () => StorageService(getIt<SharedPreferences>()),
   );
-  getIt.registerLazySingleton<ApiService>(() => ApiService());
+  getIt.registerLazySingleton<ApiService>(
+    () => ApiService(getIt<ApiClient>()),
+  );
   getIt.registerLazySingleton<NetworkService>(() => NetworkService());
   getIt.registerLazySingleton<SoundService>(() => SoundService());
   

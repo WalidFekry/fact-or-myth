@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../../core/di/service_locator.dart';
 import '../../core/theme/app_colors.dart';
@@ -15,6 +16,7 @@ import '../../widgets/register_dialog.dart';
 import '../../widgets/voting_stats_widget.dart';
 import '../../data/services/sound_service.dart';
 import '../about/about_screen.dart';
+import '../onboarding/onboarding_screen.dart';
 import 'comments_screen.dart';
 
 class DailyQuestionScreen extends StatefulWidget {
@@ -25,6 +27,27 @@ class DailyQuestionScreen extends StatefulWidget {
 }
 
 class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
+  
+  // TASK 2: Handle force logout
+  void _handleForceLogout(BuildContext context) async {
+    final authVM = context.read<AuthViewModel>();
+    await authVM.logout();
+    
+    if (mounted) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const OnboardingScreen()),
+        (route) => false,
+      );
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('تم تسجيل الخروج. يرجى تسجيل الدخول مرة أخرى'),
+          backgroundColor: AppColors.error,
+          duration: Duration(seconds: 3),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,6 +115,14 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
         body: SafeArea(
           child: Consumer<DailyQuestionViewModel>(
             builder: (context, vm, _) {
+              // TASK 2: Handle force_logout
+              if (vm.error == 'force_logout') {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  _handleForceLogout(context);
+                });
+                return const Center(child: CircularProgressIndicator());
+              }
+
               if (vm.isLoading) {
                 return const QuestionSkeletonLoader();
               }
@@ -157,6 +188,12 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          // Dynamic Greeting (only show before answering)
+          if (!vm.hasAnswered) ...[
+            _buildGreetingSection(context),
+            const SizedBox(height: 16),
+          ],
+
           // Countdown Timer at Top (if answered)
           if (vm.hasAnswered && vm.nextQuestionTime != null) ...[
             CountdownTimer(targetTime: vm.nextQuestionTime!),
@@ -173,6 +210,55 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
           else
             _buildResultSection(context, vm),
         ],
+      ),
+    );
+  }
+
+  Widget _buildGreetingSection(BuildContext context) {
+    final authVM = context.read<AuthViewModel>();
+    final userName = authVM.getUserName() ?? 'صديقي';
+    
+    return Card(
+      color: AppColors.primaryDark.withOpacity(0.1),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: AppColors.primaryDark.withOpacity(0.15),
+                shape: BoxShape.circle,
+              ),
+              child: const Center(
+                child: Text(
+                  '👋',
+                  style: TextStyle(fontSize: 24),
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'أهلاً يا $userName',
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    'جاهز لسؤال اليوم؟ 🔥',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -333,8 +419,9 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
                 onTap: () async {
                   final registered = await showRegisterDialog(context);
                   if (registered == true && mounted) {
-                    // Reload the screen or update state if needed
-                    setState(() {});
+                    // Reload the question to show migrated answer
+                    final dailyVM = context.read<DailyQuestionViewModel>();
+                    await dailyVM.loadDailyQuestion();
                   }
                 },
                 child: Card(
@@ -371,7 +458,8 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
               );
             }
 
-            return _buildActionButton(
+            // TASK 4: Modern Comments Button
+            return _buildModernActionButton(
               context,
               icon: Icons.comment_rounded,
               label: 'التعليقات',
@@ -477,13 +565,105 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
                     height: 1.5,
                   ),
             ),
+            const SizedBox(height: 16),
+            // TASK 4: Share & Copy Buttons
+            Row(
+              children: [
+                Expanded(
+                  child: _buildIconButton(
+                    context,
+                    icon: Icons.share_rounded,
+                    label: 'مشاركة',
+                    onTap: () {
+                      ShareUtils.shareResult(
+                        questionText: vm.question!.question,
+                        correctAnswer: vm.question!.correctAnswer,
+                        explanation: vm.question!.explanation,
+                        userAnswer: vm.userAnswer!,
+                        isCorrect: vm.isCorrect!,
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _buildIconButton(
+                    context,
+                    icon: Icons.content_copy_rounded,
+                    label: 'نسخ',
+                    onTap: () {
+                      _copyToClipboard(context, vm);
+                    },
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildActionButton(
+  Widget _buildIconButton(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return Material(
+      color: AppColors.primaryDark.withOpacity(0.1),
+      borderRadius: BorderRadius.circular(10),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(10),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, color: AppColors.primaryDark, size: 18),
+              const SizedBox(width: 8),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.primaryDark,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _copyToClipboard(BuildContext context, DailyQuestionViewModel vm) {
+    final content = '''
+🧠 حقيقة ولا خرافة؟
+
+${vm.question!.question}
+
+الإجابة: ${vm.question!.correctAnswer ? 'حقيقة ✓' : 'خرافة ✗'}
+
+التفسير:
+${vm.question!.explanation}
+
+جرب التطبيق الآن!
+''';
+    
+    Clipboard.setData(ClipboardData(text: content));
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('تم النسخ ✓'),
+        backgroundColor: AppColors.success,
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+
+  Widget _buildModernActionButton(
     BuildContext context, {
     required IconData icon,
     required String label,
@@ -493,21 +673,29 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
     return Material(
       color: color,
       borderRadius: BorderRadius.circular(12),
+      elevation: 2,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 14),
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, color: Colors.white, size: 20),
-              const SizedBox(width: 10),
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(icon, color: Colors.white, size: 20),
+              ),
+              const SizedBox(width: 12),
               Text(
                 label,
                 style: const TextStyle(
-                  fontSize: 15,
+                  fontSize: 16,
                   fontWeight: FontWeight.w600,
                   color: Colors.white,
                 ),
