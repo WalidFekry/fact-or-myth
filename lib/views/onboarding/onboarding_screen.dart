@@ -45,7 +45,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     await prefs.setBool(AppConstants.keyIsFirstTime, false);
     
     if (mounted) {
-      // TASK 1: Navigate to notification permission screen after onboarding
+      // Navigate to notification permission screen after onboarding
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => const NotificationPermissionScreen()),
       );

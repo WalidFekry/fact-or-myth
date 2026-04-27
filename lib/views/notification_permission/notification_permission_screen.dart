@@ -23,21 +23,18 @@ class _NotificationPermissionScreenState extends State<NotificationPermissionScr
     try {
       final notificationService = getIt<NotificationService>();
       final storageService = getIt<StorageService>();
-      
+
       // Request permission
       final granted = await notificationService.requestPermission();
-      
+
       if (granted) {
         // Subscribe to topics
         await notificationService.subscribeToTopics();
-        
-        // Save FCM token to backend if user is logged in
-        await notificationService.saveFCMTokenToBackend();
-        
+
         // Mark as notification permission shown
         await storageService.setNotificationPermissionShown(true);
         await storageService.setNotificationsEnabled(true);
-        
+
         if (mounted) {
           // Navigate to home
           Navigator.of(context).pushReplacement(
@@ -48,7 +45,7 @@ class _NotificationPermissionScreenState extends State<NotificationPermissionScr
         // Permission denied
         await storageService.setNotificationPermissionShown(true);
         await storageService.setNotificationsEnabled(false);
-        
+
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -56,7 +53,7 @@ class _NotificationPermissionScreenState extends State<NotificationPermissionScr
               backgroundColor: AppColors.warning,
             ),
           );
-          
+
           // Still navigate to home
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (_) => const HomeScreen()),
@@ -83,11 +80,11 @@ class _NotificationPermissionScreenState extends State<NotificationPermissionScr
 
   Future<void> _skipNotifications() async {
     final storageService = getIt<StorageService>();
-    
+
     // Mark as shown but not enabled
     await storageService.setNotificationPermissionShown(true);
     await storageService.setNotificationsEnabled(false);
-    
+
     if (mounted) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => const HomeScreen()),
@@ -104,7 +101,6 @@ class _NotificationPermissionScreenState extends State<NotificationPermissionScr
           child: Column(
             children: [
               const Spacer(),
-              
               // Icon
               Container(
                 width: 120,
@@ -121,9 +117,7 @@ class _NotificationPermissionScreenState extends State<NotificationPermissionScr
                   ),
                 ),
               ),
-              
-              const SizedBox(height: 32),
-              
+              const SizedBox(height: 20),
               // Title
               Text(
                 'فعّل الإشعارات 🔔',
@@ -132,20 +126,16 @@ class _NotificationPermissionScreenState extends State<NotificationPermissionScr
                     ),
                 textAlign: TextAlign.center,
               ),
-              
-              const SizedBox(height: 16),
-              
+              const SizedBox(height: 15),
               // Description
               Text(
-                'وصلك أسئلة يومية، اقتباسات، ومحتوى مميز أول بأول',
+                'فعّل الإشعارات علشان يوصلك الجديد أول بأول وتستفيد من كل المميزات',
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       height: 1.6,
                     ),
                 textAlign: TextAlign.center,
               ),
-              
-              const SizedBox(height: 24),
-              
+              const SizedBox(height: 20),
               // Benefits
               _buildBenefit(
                 icon: Icons.quiz_rounded,
@@ -161,9 +151,7 @@ class _NotificationPermissionScreenState extends State<NotificationPermissionScr
                 icon: Icons.star_rounded,
                 text: 'تحديثات التطبيق والمميزات الجديدة',
               ),
-              
               const Spacer(),
-              
               // Enable Button
               SizedBox(
                 width: double.infinity,
@@ -195,9 +183,7 @@ class _NotificationPermissionScreenState extends State<NotificationPermissionScr
                         ),
                 ),
               ),
-              
               const SizedBox(height: 12),
-              
               // Skip Button
               SizedBox(
                 width: double.infinity,
@@ -219,8 +205,7 @@ class _NotificationPermissionScreenState extends State<NotificationPermissionScr
                   ),
                 ),
               ),
-              
-              const SizedBox(height: 16),
+              const SizedBox(height: 15),
             ],
           ),
         ),

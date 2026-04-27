@@ -259,13 +259,4 @@ class StorageService {
   bool areNotificationsEnabled() {
     return _prefs.getBool(AppConstants.keyNotificationsEnabled) ?? false;
   }
-
-  // FCM Token
-  Future<void> saveFCMToken(String token) async {
-    await _prefs.setString(AppConstants.keyFCMToken, token);
-  }
-
-  Future<String?> getFCMToken() async {
-    return _prefs.getString(AppConstants.keyFCMToken);
-  }
 }

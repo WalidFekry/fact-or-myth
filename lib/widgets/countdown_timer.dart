@@ -66,7 +66,7 @@ class _CountdownTimerState extends State<CountdownTimer> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
+              const Icon(
                 Icons.access_time_rounded,
                 color: AppColors.primaryDark,
                 size: 18,

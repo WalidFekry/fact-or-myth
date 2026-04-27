@@ -14,13 +14,12 @@ class LeaderboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Only create LeaderboardViewModel, use existing AuthViewModel from main.dart
     return ChangeNotifierProvider(
       create: (_) => getIt<LeaderboardViewModel>(),
       builder: (context, child) {
         return Scaffold(
           appBar: CustomAppBar(
-            title: 'الترتيب',
+            title: 'لائحة المتصدرين',
             showBack: false,
             actions: [
               IconButton(
@@ -105,7 +104,7 @@ class LeaderboardScreen extends StatelessWidget {
                         color: AppColors.primaryDark.withOpacity(0.1),
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.login_rounded,
                         size: 40,
                         color: AppColors.primaryDark,
@@ -545,7 +544,7 @@ class LeaderboardScreen extends StatelessWidget {
               child: Center(
                 child: Text(
                   '${item.rank}',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     color: AppColors.primaryDark,
                     fontSize: 13,
@@ -582,7 +581,7 @@ class LeaderboardScreen extends StatelessWidget {
           ),
           child: Text(
             '${item.percentage.toStringAsFixed(1)}%',
-            style: TextStyle(
+            style: const TextStyle(
               fontWeight: FontWeight.bold,
               color: AppColors.success,
               fontSize: 13,

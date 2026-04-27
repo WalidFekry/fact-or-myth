@@ -36,7 +36,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           title: 'الملف الشخصي',
           showBack: false,
           actions: [
-            // TASK 6: Sound Toggle in AppBar (LEFT side)
+            //Sound Toggle in AppBar
             Consumer<ProfileViewModel>(
               builder: (context, vm, _) {
                 if (vm.profile == null) return const SizedBox.shrink();
@@ -142,7 +142,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             },
                             child: Row(
                               children: [
-                                Icon(
+                                const Icon(
                                   Icons.edit_rounded,
                                   size: 14,
                                   color: AppColors.primaryDark,
@@ -162,8 +162,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 24),
-
+                  const SizedBox(height: 10),
                   // Stats Grid (2x2)
                   Row(
                     children: [
@@ -212,8 +211,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 16),
-
+                  const SizedBox(height: 10),
+                  // Notifications Settings Card
+                  Card(
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 4,
+                      ),
+                      leading: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryDark.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Icon(
+                          Icons.notifications_rounded,
+                          color: AppColors.primaryDark,
+                          size: 20,
+                        ),
+                      ),
+                      title: Text(
+                        'الإشعارات',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      subtitle: Text(
+                        'تلقي إشعارات الأسئلة اليومية',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                      trailing: _buildNotificationToggle(),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
                   // Streak Card
                   Card(
                     child: Padding(
@@ -255,7 +287,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           Text(
                             '${profile.currentStreak}',
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 28,
                               fontWeight: FontWeight.bold,
                               color: AppColors.warning,
@@ -265,43 +297,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
-
-                  // TASK 8: Notifications Settings Card
-                  Card(
-                    child: ListTile(
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 4,
-                      ),
-                      leading: Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: AppColors.primaryDark.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: const Icon(
-                          Icons.notifications_rounded,
-                          color: AppColors.primaryDark,
-                          size: 20,
-                        ),
-                      ),
-                      title: Text(
-                        'الإشعارات',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.w600,
-                            ),
-                      ),
-                      subtitle: Text(
-                        'تلقي إشعارات الأسئلة اليومية',
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                      trailing: _buildNotificationToggle(),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
+                  const SizedBox(height: 10),
                   // Account Actions Section
                   Card(
                     child: Column(
@@ -393,8 +389,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 24),
-
+                  const SizedBox(height: 20),
                   // App Branding
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -498,7 +493,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               size: 24,
             ),
             SizedBox(width: 8),
-            Text('تحذير'),
+            Text('تحذير',style: TextStyle(color: AppColors.error),),
           ],
         ),
         content: const Text(
@@ -569,10 +564,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         Navigator.of(context, rootNavigator: true).pop();
       }
       
-      // TASK 1: Clear ALL local data (including cache)
+      // Clear ALL local data (including cache)
       await authVM.deleteAccountData();
       
-      // TASK 3: Navigate to onboarding (remove all routes)
+      // Navigate to onboarding (remove all routes)
       if (mounted) {
         await Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (_) => const OnboardingScreen()),
@@ -632,7 +627,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               size: 24,
             ),
             SizedBox(width: 8),
-            Text('تسجيل الخروج'),
+            Text('تسجيل الخروج', style: TextStyle(color: AppColors.warning),),
           ],
         ),
         content: const Text(

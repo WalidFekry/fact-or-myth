@@ -1,5 +1,7 @@
+import 'package:fact_or_myth/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../core/di/service_locator.dart';
 import '../../core/theme/app_colors.dart';
 import '../../data/models/profile_model.dart';
@@ -40,6 +42,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       return;
     }
 
+    if (_nameController.text.trim().length > 20) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('اسمك يجب أن يحتوي على أقل من 20 حرفًا')),
+      );
+      return;
+    }
+
     final success = await vm.updateProfile(
       _nameController.text.trim(),
       _selectedAvatar,
@@ -59,8 +68,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return ChangeNotifierProvider(
       create: (_) => getIt<ProfileViewModel>(),
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('تعديل الملف الشخصي'),
+        appBar: const CustomAppBar(
+          title: "تعديل الملف الشخصي",
+          showBack: true,
         ),
         body: Consumer<ProfileViewModel>(
           builder: (context, vm, _) {
@@ -102,7 +112,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     child: ElevatedButton(
                       onPressed: vm.isLoading ? null : () => _saveProfile(vm),
                       child: vm.isLoading
-                          ? const CircularProgressIndicator(color: AppColors.pureWhite)
+                          ? const CircularProgressIndicator(
+                              color: AppColors.pureWhite)
                           : const Text('حفظ'),
                     ),
                   ),

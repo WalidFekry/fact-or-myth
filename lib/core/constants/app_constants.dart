@@ -31,7 +31,6 @@ class AppConstants {
   // Storage Keys - Notifications
   static const String keyNotificationPermissionShown = 'notification_permission_shown';
   static const String keyNotificationsEnabled = 'notifications_enabled';
-  static const String keyFCMToken = 'fcm_token';
   
   // Categories
   static const List<String> categories = [

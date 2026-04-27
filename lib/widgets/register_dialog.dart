@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../core/theme/app_colors.dart';
+
 import '../core/constants/app_constants.dart';
+import '../core/theme/app_colors.dart';
 import '../viewmodels/auth_viewmodel.dart';
 import 'avatar_selector.dart';
 
@@ -30,6 +31,13 @@ class _RegisterDialogState extends State<RegisterDialog> {
     if (_nameController.text.trim().isEmpty) {
       setState(() {
         _errorMessage = 'من فضلك أدخل اسمك';
+      });
+      return;
+    }
+
+    if (_nameController.text.trim().length > 20) {
+      setState(() {
+        _errorMessage = 'الاسم طويل جداً';
       });
       return;
     }
@@ -79,7 +87,7 @@ class _RegisterDialogState extends State<RegisterDialog> {
                           color: AppColors.primaryDark.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: Icon(
+                        child: const Icon(
                           Icons.person_add_rounded,
                           color: AppColors.primaryDark,
                           size: 22,
@@ -106,7 +114,7 @@ class _RegisterDialogState extends State<RegisterDialog> {
                     controller: _nameController,
                     decoration: InputDecoration(
                       hintText: 'أدخل اسمك',
-                      prefixIcon: Icon(
+                      prefixIcon: const Icon(
                         Icons.person_outline_rounded,
                         color: AppColors.primaryDark,
                         size: 20,
@@ -178,7 +186,8 @@ class _RegisterDialogState extends State<RegisterDialog> {
 }
 
 // Helper function to show the dialog
-Future<bool?> showRegisterDialog(BuildContext context, {VoidCallback? onRegistered}) {
+Future<bool?> showRegisterDialog(BuildContext context,
+    {VoidCallback? onRegistered}) {
   return showDialog<bool>(
     context: context,
     barrierDismissible: true,
