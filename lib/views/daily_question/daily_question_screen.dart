@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+
+import '../../core/constants/assets.dart';
 import '../../core/di/service_locator.dart';
 import '../../core/theme/app_colors.dart';
-import '../../core/constants/assets.dart';
 import '../../core/utils/share_utils.dart';
-import '../../viewmodels/daily_question_viewmodel.dart';
+import '../../data/services/sound_service.dart';
 import '../../viewmodels/auth_viewmodel.dart';
+import '../../viewmodels/daily_question_viewmodel.dart';
 import '../../viewmodels/theme_viewmodel.dart';
 import '../../widgets/answer_button.dart';
 import '../../widgets/countdown_timer.dart';
-import '../../widgets/skeleton_loading.dart';
 import '../../widgets/error_widget.dart';
+import '../../widgets/modern_action_button.dart';
 import '../../widgets/register_dialog.dart';
+import '../../widgets/skeleton_loading.dart';
 import '../../widgets/voting_stats_widget.dart';
-import '../../data/services/sound_service.dart';
 import '../about/about_screen.dart';
 import '../onboarding/onboarding_screen.dart';
 import 'comments_screen.dart';
@@ -27,18 +28,17 @@ class DailyQuestionScreen extends StatefulWidget {
 }
 
 class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
-  
   // TASK 2: Handle force logout
   void _handleForceLogout(BuildContext context) async {
     final authVM = context.read<AuthViewModel>();
     await authVM.logout();
-    
+
     if (mounted) {
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => const OnboardingScreen()),
         (route) => false,
       );
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('تم تسجيل الخروج. يرجى تسجيل الدخول مرة أخرى'),
@@ -91,15 +91,16 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
               builder: (context, themeVM, _) {
                 return IconButton(
                   icon: Icon(
-                    themeVM.isDarkMode ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
+                    themeVM.isDarkMode
+                        ? Icons.light_mode_rounded
+                        : Icons.dark_mode_rounded,
                     size: 22,
                   ),
                   onPressed: () => themeVM.toggleTheme(),
                   tooltip: themeVM.isDarkMode ? 'الوضع الفاتح' : 'الوضع الداكن',
                 );
               },
-            ),
-            // About Button
+            ), // About Button
             IconButton(
               icon: const Icon(Icons.info_outline_rounded, size: 22),
               onPressed: () {
@@ -182,7 +183,8 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
     );
   }
 
-  Widget _buildQuestionContent(BuildContext context, DailyQuestionViewModel vm) {
+  Widget _buildQuestionContent(
+      BuildContext context, DailyQuestionViewModel vm) {
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
       child: Column(
@@ -195,15 +197,13 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
           ],
 
           // Question Card
-          _buildQuestionCard(context, vm),
-          const SizedBox(height: 14),
+          _buildQuestionCard(context, vm), const SizedBox(height: 14),
 
           // Answer Buttons or Result
           if (!vm.hasAnswered)
             _buildAnswerButtons(vm)
           else
-            _buildResultSection(context, vm),
-          // Countdown Timer if answered)
+            _buildResultSection(context, vm), // Countdown Timer if answered)
           if (vm.nextQuestionTime != null) ...[
             const SizedBox(height: 14),
             CountdownTimer(targetTime: vm.nextQuestionTime!),
@@ -216,7 +216,7 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
   Widget _buildGreetingSection(BuildContext context) {
     final authVM = context.read<AuthViewModel>();
     final userName = authVM.getUserName() ?? 'صديقي';
-    
+
     return Card(
       color: AppColors.primaryDark.withOpacity(0.1),
       child: Padding(
@@ -302,41 +302,45 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
     // Disable buttons during loading or if already answered
     final isEnabled = vm.canSubmitAnswer;
     final soundService = getIt<SoundService>();
-    
+
     return Column(
       children: [
         AnswerButton(
           text: 'حقيقة ✓',
           isTrue: true,
-          onPressed: isEnabled ? () async {
-            await vm.submitAnswer(true);
-            // Play sound after answer is submitted
-            if (vm.isCorrect != null) {
-              if (vm.isCorrect!) {
-                soundService.playCorrectSound();
-              } else {
-                soundService.playWrongSound();
-              }
-            }
-          } : () {},
+          onPressed: isEnabled
+              ? () async {
+                  await vm.submitAnswer(true);
+                  // Play sound after answer is submitted
+                  if (vm.isCorrect != null) {
+                    if (vm.isCorrect!) {
+                      soundService.playCorrectSound();
+                    } else {
+                      soundService.playWrongSound();
+                    }
+                  }
+                }
+              : () {},
         ),
         const SizedBox(height: 12),
         AnswerButton(
           text: 'خرافة ✗',
           isTrue: false,
-          onPressed: isEnabled ? () async {
-            await vm.submitAnswer(false);
-            // Play sound after answer is submitted
-            if (vm.isCorrect != null) {
-              if (vm.isCorrect!) {
-                soundService.playCorrectSound();
-              } else {
-                soundService.playWrongSound();
-              }
-            }
-          } : () {},
+          onPressed: isEnabled
+              ? () async {
+                  await vm.submitAnswer(false);
+                  // Play sound after answer is submitted
+                  if (vm.isCorrect != null) {
+                    if (vm.isCorrect!) {
+                      soundService.playCorrectSound();
+                    } else {
+                      soundService.playWrongSound();
+                    }
+                  }
+                }
+              : () {},
         ),
-        
+
         // Show loading indicator during submission
         if (vm.isLoading)
           Padding(
@@ -349,7 +353,8 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
                   height: 20,
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.primaryDark),
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(AppColors.primaryDark),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -406,8 +411,7 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
             falseVotes: vm.question!.falseVotes,
           ),
 
-        if (vm.question!.totalVotes > 0)
-          const SizedBox(height: 16),
+        if (vm.question!.totalVotes > 0) const SizedBox(height: 16),
 
         // Action Buttons
         Consumer<AuthViewModel>(
@@ -437,17 +441,19 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
                         const SizedBox(height: 8),
                         Text(
                           'سجل حساب لحفظ نتائجك',
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                fontWeight: FontWeight.w600,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                  ),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 4),
                         Text(
                           'اضغط هنا للتسجيل',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: AppColors.primaryDark,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: AppColors.primaryDark,
+                                  ),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -457,8 +463,7 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
               );
             }
 
-            return _buildModernActionButton(
-              context,
+            return ModernActionButton(
               icon: Icons.comment_rounded,
               label: 'التعليقات',
               color: AppColors.primaryDark,
@@ -481,7 +486,7 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
 
   Widget _buildResultMessage(BuildContext context, DailyQuestionViewModel vm) {
     final isCorrect = vm.isCorrect!;
-    
+
     return Card(
       color: isCorrect ? AppColors.success : AppColors.error,
       child: Padding(
@@ -510,7 +515,8 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
     );
   }
 
-  Widget _buildExplanationCard(BuildContext context, DailyQuestionViewModel vm) {
+  Widget _buildExplanationCard(
+      BuildContext context, DailyQuestionViewModel vm) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -573,7 +579,19 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
                     icon: Icons.content_copy_rounded,
                     label: 'نسخ',
                     onTap: () {
-                      ShareUtils.copyQuestionContent(context: context,questionText:vm.question!.question ,correctAnswer:vm.question!.correctAnswer ,explanation: vm.question!.explanation);
+                      ShareUtils.copyQuestionContent(
+                          questionText: vm.question!.question,
+                          correctAnswer: vm.question!.correctAnswer,
+                          explanation: vm.question!.explanation);
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('تم نسخ السؤال ✓'),
+                            duration: Duration(seconds: 2),
+                            backgroundColor: AppColors.success,
+                          ),
+                        );
+                      }
                     },
                   ),
                 ),
@@ -619,76 +637,5 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
     );
   }
 
-  Widget _buildModernActionButton(
-      BuildContext context, {
-        required IconData icon,
-        required String label,
-        required Color color,
-        required VoidCallback onTap,
-      }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(20),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeInOut,
-          padding: const EdgeInsets.all(5),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            gradient: LinearGradient(
-              colors: [
-                color,
-                color.withOpacity(0.7),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: color.withOpacity(0.3),
-                blurRadius: 12,
-                offset: const Offset(0, 6),
-              ),
-            ],
-            border: Border.all(
-              color: Colors.white.withOpacity(0.2),
-            ),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Text
-              Text(
-                label,
-                style: const TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  letterSpacing: 0.5,
-                ),
-              ),
 
-              const SizedBox(width: 14),
-
-              // Icon container
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.15),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(
-                  icon,
-                  color: Colors.white,
-                  size: 18,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 }

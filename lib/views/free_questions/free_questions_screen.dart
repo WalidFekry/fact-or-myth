@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../core/di/service_locator.dart';
+
 import '../../core/constants/app_constants.dart';
+import '../../core/di/service_locator.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/utils/share_utils.dart';
+import '../../data/services/sound_service.dart';
 import '../../viewmodels/free_questions_viewmodel.dart';
 import '../../widgets/answer_button.dart';
-import '../../widgets/skeleton_loading.dart';
-import '../../widgets/error_widget.dart';
 import '../../widgets/custom_app_bar.dart';
-import '../../data/services/sound_service.dart';
+import '../../widgets/error_widget.dart';
+import '../../widgets/modern_action_button.dart';
+import '../../widgets/skeleton_loading.dart';
 
 class FreeQuestionsScreen extends StatelessWidget {
   const FreeQuestionsScreen({super.key});
@@ -23,7 +25,7 @@ class FreeQuestionsScreen extends StatelessWidget {
         ),
         title: const Text('تحديث الأسئلة'),
         content: const Text(
-          'سيتم تحميل أحدث الأسئلة من قاعدة البيانات إذا كانت متوفرة، وسيتم إعادة ترتيب جميع الأسئلة من البداية. هل تريد المتابعة؟',
+          'سيتم تحميل أحدث الأسئلة من قاعدة البيانات إذا كانت متوفرة. هل تريد المتابعة؟',
           style: TextStyle(height: 1.5),
         ),
         actions: [
@@ -37,9 +39,9 @@ class FreeQuestionsScreen extends StatelessWidget {
               await vm.syncQuestions();
               if (context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: const Text('تم تحديث الأسئلة بنجاح ✓'),
-                    duration: const Duration(seconds: 2),
+                  const SnackBar(
+                    content: Text('تم تحديث الأسئلة بنجاح ✓'),
+                    duration: Duration(seconds: 2),
                     backgroundColor: AppColors.success,
                   ),
                 );
@@ -60,15 +62,15 @@ class FreeQuestionsScreen extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
-        title: Row(
+        title: const Row(
           children: [
             Icon(
               Icons.celebration_rounded,
               color: AppColors.success,
               size: 28,
             ),
-            const SizedBox(width: 12),
-            const Text('أحسنت!'),
+            SizedBox(width: 12),
+            Text('أحسنت!'),
           ],
         ),
         content: Text(
@@ -79,7 +81,6 @@ class FreeQuestionsScreen extends StatelessWidget {
           TextButton(
             onPressed: () {
               Navigator.pop(context);
-              // Don't navigate back, just stay
             },
             child: const Text('اختيار قسم آخر'),
           ),
@@ -111,22 +112,27 @@ class FreeQuestionsScreen extends StatelessWidget {
                   children: [
                     // Offline/Online indicator
                     Icon(
-                      vm.isOnline ? Icons.cloud_done_rounded : Icons.cloud_off_rounded,
-                      color: vm.isOnline ? AppColors.success : AppColors.warning,
+                      vm.isOnline
+                          ? Icons.cloud_done_rounded
+                          : Icons.cloud_off_rounded,
+                      color:
+                          vm.isOnline ? AppColors.success : AppColors.warning,
                       size: 20,
                     ),
-                    const SizedBox(width: 4),
-                    // Sync button
+                    const SizedBox(width: 4), // Sync button
                     if (vm.isOnline)
                       IconButton(
                         icon: vm.isSyncing
                             ? const SizedBox(
                                 width: 18,
                                 height: 18,
-                                child: CircularProgressIndicator(strokeWidth: 2),
+                                child:
+                                    CircularProgressIndicator(strokeWidth: 2),
                               )
                             : const Icon(Icons.sync_rounded, size: 22),
-                        onPressed: vm.isSyncing ? null : () => _showRefreshDialog(context, vm),
+                        onPressed: vm.isSyncing
+                            ? null
+                            : () => _showRefreshDialog(context, vm),
                         tooltip: 'تحديث الأسئلة',
                       ),
                   ],
@@ -143,11 +149,13 @@ class FreeQuestionsScreen extends StatelessWidget {
                 if (!vm.isOnline && vm.question != null)
                   Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 10),
                     color: AppColors.warning.withOpacity(0.15),
                     child: const Row(
                       children: [
-                        Icon(Icons.cloud_off_rounded, color: AppColors.warning, size: 18),
+                        Icon(Icons.cloud_off_rounded,
+                            color: AppColors.warning, size: 18),
                         SizedBox(width: 8),
                         Expanded(
                           child: Text(
@@ -166,7 +174,8 @@ class FreeQuestionsScreen extends StatelessWidget {
                 if (vm.lastSyncTime != null)
                   Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                     child: Text(
                       'آخر تحديث: ${_formatSyncTime(vm.lastSyncTime!)}',
                       style: Theme.of(context).textTheme.bodySmall,
@@ -177,7 +186,8 @@ class FreeQuestionsScreen extends StatelessWidget {
                 // Category Selector
                 Container(
                   height: 52,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: AppConstants.categories.length,
@@ -203,11 +213,12 @@ class FreeQuestionsScreen extends StatelessWidget {
                 // Progress Indicator
                 if (vm.shouldShowProgress)
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.check_circle_outline_rounded,
                           size: 16,
                           color: AppColors.primaryDark,
@@ -215,10 +226,11 @@ class FreeQuestionsScreen extends StatelessWidget {
                         const SizedBox(width: 6),
                         Text(
                           '${vm.totalQuestionsCount - vm.remainingQuestionsCount} / ${vm.totalQuestionsCount}',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.primaryDark,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.primaryDark,
+                                  ),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
@@ -226,10 +238,14 @@ class FreeQuestionsScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(4),
                             child: LinearProgressIndicator(
                               value: vm.totalQuestionsCount > 0
-                                  ? (vm.totalQuestionsCount - vm.remainingQuestionsCount) / vm.totalQuestionsCount
+                                  ? (vm.totalQuestionsCount -
+                                          vm.remainingQuestionsCount) /
+                                      vm.totalQuestionsCount
                                   : 0,
-                              backgroundColor: AppColors.primaryDark.withOpacity(0.1),
-                              valueColor: AlwaysStoppedAnimation<Color>(AppColors.primaryDark),
+                              backgroundColor:
+                                  AppColors.primaryDark.withOpacity(0.1),
+                              valueColor: const AlwaysStoppedAnimation<Color>(
+                                  AppColors.primaryDark),
                               minHeight: 6,
                             ),
                           ),
@@ -267,7 +283,7 @@ class FreeQuestionsScreen extends StatelessWidget {
         _showCompletionDialog(context, vm);
       });
     }
-    
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -282,8 +298,8 @@ class FreeQuestionsScreen extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
               child: Icon(
-                vm.hasCompletedCategory() 
-                    ? Icons.celebration_rounded 
+                vm.hasCompletedCategory()
+                    ? Icons.celebration_rounded
                     : Icons.quiz_rounded,
                 size: 40,
                 color: AppColors.primaryDark,
@@ -291,7 +307,7 @@ class FreeQuestionsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              vm.hasCompletedCategory() 
+              vm.hasCompletedCategory()
                   ? 'انتهت الأسئلة في هذا القسم 👏'
                   : 'لا توجد أسئلة',
               style: Theme.of(context).textTheme.displayMedium,
@@ -311,7 +327,8 @@ class FreeQuestionsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildQuestionContent(BuildContext context, FreeQuestionsViewModel vm) {
+  Widget _buildQuestionContent(
+      BuildContext context, FreeQuestionsViewModel vm) {
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
       child: Column(
@@ -335,7 +352,7 @@ class FreeQuestionsScreen extends StatelessWidget {
                     ),
                     child: Text(
                       vm.question!.category,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: AppColors.primaryDark,
                         fontWeight: FontWeight.w600,
                         fontSize: 13,
@@ -343,7 +360,7 @@ class FreeQuestionsScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  
+
                   // Question Text
                   Text(
                     vm.question!.question,
@@ -356,8 +373,7 @@ class FreeQuestionsScreen extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 20),
-
+          const SizedBox(height: 10),
           // Answer Buttons or Result
           if (!vm.hasAnswered)
             _buildAnswerButtons(vm)
@@ -370,7 +386,7 @@ class FreeQuestionsScreen extends StatelessWidget {
 
   Widget _buildAnswerButtons(FreeQuestionsViewModel vm) {
     final soundService = getIt<SoundService>();
-    
+
     return Column(
       children: [
         AnswerButton(
@@ -427,8 +443,7 @@ class FreeQuestionsScreen extends StatelessWidget {
           isSelected: vm.userAnswer == false,
           correctAnswer: vm.question!.correctAnswer,
         ),
-        const SizedBox(height: 16),
-
+        const SizedBox(height: 10),
         // Result Message
         Card(
           color: vm.isCorrect! ? AppColors.success : AppColors.error,
@@ -437,7 +452,9 @@ class FreeQuestionsScreen extends StatelessWidget {
             child: Row(
               children: [
                 Icon(
-                  vm.isCorrect! ? Icons.check_circle_rounded : Icons.cancel_rounded,
+                  vm.isCorrect!
+                      ? Icons.check_circle_rounded
+                      : Icons.cancel_rounded,
                   color: AppColors.pureWhite,
                   size: 24,
                 ),
@@ -452,27 +469,11 @@ class FreeQuestionsScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                // Share Button
-                IconButton(
-                  icon: const Icon(Icons.share_rounded, color: AppColors.pureWhite, size: 20),
-                  onPressed: () {
-                    if (vm.question != null && vm.userAnswer != null) {
-                      ShareUtils.shareResult(
-                        questionText: vm.question!.question,
-                        correctAnswer: vm.question!.correctAnswer,
-                        explanation: vm.question!.explanation,
-                        userAnswer: vm.userAnswer!,
-                      );
-                    }
-                  },
-                  tooltip: 'مشاركة',
-                ),
               ],
             ),
           ),
         ),
-        const SizedBox(height: 12),
-
+        const SizedBox(height: 10),
         // Explanation Card
         Card(
           child: Padding(
@@ -488,7 +489,7 @@ class FreeQuestionsScreen extends StatelessWidget {
                         color: AppColors.primaryDark.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.lightbulb_rounded,
                         color: AppColors.primaryDark,
                         size: 18,
@@ -506,11 +507,11 @@ class FreeQuestionsScreen extends StatelessWidget {
                     IconButton(
                       icon: const Icon(Icons.share_rounded, size: 20),
                       onPressed: () {
-                        // ShareUtils.shareQuestionContent(
-                        //   questionText: vm.question!.question,
-                        //   correctAnswer: vm.question!.correctAnswer,
-                        //   explanation: vm.question!.explanation,
-                        // );
+                        ShareUtils.shareResult(
+                            questionText: vm.question!.question,
+                            correctAnswer: vm.question!.correctAnswer,
+                            explanation: vm.question!.explanation,
+                            userAnswer: vm.userAnswer!);
                       },
                       tooltip: 'مشاركة',
                       padding: EdgeInsets.zero,
@@ -523,12 +524,11 @@ class FreeQuestionsScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    // TASK 1: Copy Button
+                    // Copy Button
                     IconButton(
                       icon: const Icon(Icons.copy_rounded, size: 18),
                       onPressed: () async {
                         await ShareUtils.copyQuestionContent(
-                          context: context,
                           questionText: vm.question!.question,
                           correctAnswer: vm.question!.correctAnswer,
                           explanation: vm.question!.explanation,
@@ -566,17 +566,14 @@ class FreeQuestionsScreen extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 16),
-
+        const SizedBox(height: 10),
         // Next Question Button
-        SizedBox(
-          width: double.infinity,
-          height: 52,
-          child: ElevatedButton(
-            onPressed: vm.nextQuestion,
-            child: const Text('سؤال جديد'),
-          ),
-        ),
+        ModernActionButton(
+          icon: Icons.question_mark_rounded,
+          label: 'سؤال جديد',
+          color: AppColors.primaryDark,
+          onTap: () => vm.nextQuestion(),
+        )
       ],
     );
   }

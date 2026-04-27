@@ -32,7 +32,6 @@ class ShareUtils {
 
   //Copy question content to clipboard
   static Future<void> copyQuestionContent({
-    required BuildContext context,
     required String questionText,
     required bool correctAnswer,
     required String explanation,
@@ -46,14 +45,6 @@ class ShareUtils {
     copyText += 'حقيقة ولا خرافة - اختبر معلوماتك اليومية 📱';
 
     await Clipboard.setData(ClipboardData(text: copyText));
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('تم النسخ ✓'),
-        backgroundColor: AppColors.success,
-        duration: Duration(seconds: 2),
-      ),
-    );
   }
 
   // Share full app (Android + iOS links)
