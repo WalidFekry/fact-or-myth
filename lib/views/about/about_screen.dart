@@ -272,7 +272,7 @@ class AboutScreen extends StatelessWidget {
             title: 'سياسة الخصوصية',
             subtitle: 'اطلع على سياسة الخصوصية',
             onTap: () => _launchURL(
-                'https://post.walid-fekry.com/fact-app/privacy-policy.html'),
+                'https://post.walid-fekry.com/fact-or-myth/privacy-policy.html'),
           ),
         ],
       ),

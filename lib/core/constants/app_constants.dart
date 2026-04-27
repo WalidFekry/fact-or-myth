@@ -4,7 +4,7 @@ class AppConstants {
   static const String iosUrl = 'https://play.google.com/store/apps/details?id=fact.or.myth';
 
   // API Base URL - CHANGE THIS TO YOUR SERVER
-  static const String baseUrl = 'https://post.walid-fekry.com/fact-app/api';
+  static const String baseUrl = 'https://post.walid-fekry.com/fact-or-myth/api';
   
   // Storage Keys - User Session
   static const String keyThemeMode = 'theme_mode';
