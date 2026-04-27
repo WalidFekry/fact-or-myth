@@ -49,7 +49,7 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<NetworkService>(() => NetworkService());
   getIt.registerLazySingleton<SoundService>(() => SoundService());
   
-  // TASK 2: Register NotificationService
+  // Register NotificationService
   getIt.registerLazySingleton<NotificationService>(
     () => NotificationService(
       getIt<FirebaseMessaging>(),

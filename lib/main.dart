@@ -18,7 +18,7 @@ import 'views/onboarding/onboarding_screen.dart';
 import 'views/home/home_screen.dart';
 import 'views/notification_permission/notification_permission_screen.dart';
 
-// TASK 2: Background message handler (must be top-level)
+// Background message handler (must be top-level)
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -35,7 +35,7 @@ void main() async {
       options: DefaultFirebaseOptions.currentPlatform,
     );
 
-    // TASK 1: Initialize Firebase Crashlytics
+    // Initialize Firebase Crashlytics
     // Only enable Crashlytics in release mode
     if (kReleaseMode) {
       // Pass all uncaught Flutter errors to Crashlytics
@@ -57,13 +57,13 @@ void main() async {
       };
     }
 
-    // TASK 2: Register background message handler
+    //Register background message handler
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
     // Setup dependency injection
     await setupServiceLocator();
 
-    // TASK 2: Initialize notification service
+    // Initialize notification service
     final notificationService = getIt<NotificationService>();
     await notificationService.initialize();
     
@@ -89,7 +89,6 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -119,7 +118,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// TASK 4: Check if first time and route accordingly
+// Check if first time and route accordingly
 class InitialScreen extends StatefulWidget {
   const InitialScreen({super.key});
 
@@ -146,7 +145,7 @@ class _InitialScreenState extends State<InitialScreen> {
           MaterialPageRoute(builder: (_) => const OnboardingScreen()),
         );
       } else if (!notificationPermissionShown) {
-        // TASK 4: Not first time but notification permission not shown yet
+        // Not first time but notification permission not shown yet
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (_) => const NotificationPermissionScreen()),
         );

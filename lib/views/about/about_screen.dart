@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/constants/assets.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/utils/commen_utils.dart';
 import '../../core/utils/share_utils.dart';
 import '../../widgets/custom_app_bar.dart';
 
@@ -191,8 +192,8 @@ class AboutScreen extends StatelessWidget {
             iconColor: AppColors.textPrimaryDark,
             title: 'الكود المصدري',
             subtitle: 'شاهد المشروع على GitHub',
-            onTap: () =>
-                _launchURL('https://github.com/WalidFekry/fact-or-myth'),
+            onTap: () => CommonUtils.launchURL(
+                'https://github.com/WalidFekry/fact-or-myth'),
           ),
         ],
       ),
@@ -247,7 +248,7 @@ class AboutScreen extends StatelessWidget {
               iconColor: AppColors.primaryDark,
               title: 'تطبيقات أخرى',
               subtitle: 'اكتشف المزيد من تطبيقاتنا',
-              onTap: () => _launchURL(
+              onTap: () => CommonUtils.launchURL(
                   'https://play.google.com/store/apps/dev?id=6257553101128037563'),
             ),
           ]
@@ -271,8 +272,8 @@ class AboutScreen extends StatelessWidget {
             iconColor: AppColors.info,
             title: 'سياسة الخصوصية',
             subtitle: 'اطلع على سياسة الخصوصية',
-            onTap: () => _launchURL(
-                'https://post.walid-fekry.com/fact-or-myth/privacy-policy.html'),
+            onTap: () => CommonUtils.launchURL(
+                "https://post.walid-fekry.com/fact-or-myth/privacy-policy.html"),
           ),
         ],
       ),
@@ -314,7 +315,7 @@ class AboutScreen extends StatelessWidget {
         subtitle,
         style: Theme.of(context).textTheme.bodySmall,
       ),
-      trailing: Icon(
+      trailing: const Icon(
         Icons.arrow_forward_ios_rounded,
         size: 16,
         color: AppColors.textSecondaryDark,
@@ -331,19 +332,11 @@ class AboutScreen extends StatelessWidget {
     );
   }
 
-  // URL Launcher Methods
-  Future<void> _launchURL(String url) async {
-    final uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    }
-  }
-
   Future<void> _launchWhatsApp(String message) async {
     const phoneNumber = '+201094674881';
     final url =
         'https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message)}';
-    await _launchURL(url);
+    CommonUtils.launchURL(url);
   }
 
   Future<void> _sendSuggestionEmail() async {

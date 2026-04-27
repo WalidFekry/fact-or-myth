@@ -109,12 +109,6 @@ class QuestionRepository {
     return response['data'];
   }
 
-  Future<QuestionModel> getFreeQuestion(String category) async {
-    final response = await _apiService.get('/free-question', params: {
-      'category': category,
-    });
-    return QuestionModel.fromJson(response['data']);
-  }
 
   // Offline support methods
   Future<bool> syncFreeQuestions() async {

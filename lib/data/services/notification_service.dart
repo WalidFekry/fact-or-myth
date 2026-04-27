@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import '../../core/utils/commen_utils.dart';
 import 'storage_service.dart';
 import 'api_service.dart';
 
@@ -160,18 +161,14 @@ class NotificationService {
     }
 
     // Handle different notification types
-    final notificationType = message.data['type'] as String?;
+    final clickAction = message.data['click_action'] as String?;
     
-    switch (notificationType) {
-      case 'daily_question':
-        // Navigate to daily question screen
-        // You can use a navigation service or global key
-        break;
-      case 'quote':
-        // Show quote dialog or navigate to quotes screen
-        break;
-      case 'app_update':
-        // Navigate to update screen or show dialog
+    switch (clickAction) {
+      case 'open_url':
+       final url = message.data['url'] as String;
+       if (url.isNotEmpty) {
+         CommonUtils.launchURL(url);
+       }
         break;
       default:
         // Default behavior
