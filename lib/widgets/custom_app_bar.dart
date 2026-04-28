@@ -77,7 +77,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         children: actions!,
                       )
                     : Padding(
-                        padding: const EdgeInsets.only(right: 8, top: 12, bottom: 12),
+                        padding: const EdgeInsets.all(10),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(6),
                           child: Image.asset(
@@ -85,21 +85,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                             width: 32,
                             height: 32,
                             fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Container(
-                                width: 32,
-                                height: 32,
-                                decoration: BoxDecoration(
-                                  color: AppColors.primaryDark,
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                                child: const Icon(
-                                  Icons.quiz_rounded,
-                                  size: 18,
-                                  color: AppColors.pureWhite,
-                                ),
-                              );
-                            },
                           ),
                         ),
                       ),

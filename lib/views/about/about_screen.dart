@@ -59,7 +59,7 @@ class AboutScreen extends StatelessWidget {
   Widget _buildAboutSection(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 16),
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
         color: Theme.of(context).cardTheme.color,
         borderRadius: BorderRadius.circular(12),
@@ -70,29 +70,13 @@ class AboutScreen extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(20),
             child: Image.asset(
-              AppAssets.logo,
+              AppAssets.appLogo,
               width: 80,
               height: 80,
               fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  width: 80,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    color: AppColors.primaryDark,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: const Icon(
-                    Icons.quiz_rounded,
-                    size: 40,
-                    color: AppColors.pureWhite,
-                  ),
-                );
-              },
             ),
           ),
-          const SizedBox(height: 16),
-
+          const SizedBox(height: 10),
           // App Name
           Text(
             'حقيقة ولا خرافة؟',
@@ -103,15 +87,13 @@ class AboutScreen extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 8),
-
           // Description
           Text(
             'اختبر معلوماتك يوميًا واكتشف الحقيقة من الخرافة في تحدي ممتع وسريع!',
             style: Theme.of(context).textTheme.bodyMedium,
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 16),
-
+          const SizedBox(height: 10),
           // Version
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
