@@ -99,31 +99,18 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
         appBar: AppBar(
           title: Row(
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(6),
-                child: Image.asset(
-                  AppAssets.logo,
-                  width: 28,
-                  height: 28,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      width: 28,
-                      height: 28,
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryDark,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: const Icon(
-                        Icons.quiz_rounded,
-                        size: 16,
-                        color: AppColors.pureWhite,
-                      ),
-                    );
-                  },
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(6),
+                  child: Image.asset(
+                    AppAssets.logo,
+                    width: 32,
+                    height: 32,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
-              const SizedBox(width: 10),
               const Text('حقيقة ولا خرافة؟'),
             ],
           ),
