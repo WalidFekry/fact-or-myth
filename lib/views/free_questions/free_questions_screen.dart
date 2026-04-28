@@ -6,15 +6,38 @@ import '../../core/di/service_locator.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/utils/share_utils.dart';
 import '../../data/services/sound_service.dart';
+import '../../data/services/storage_service.dart';
 import '../../viewmodels/free_questions_viewmodel.dart';
 import '../../widgets/answer_button.dart';
 import '../../widgets/custom_app_bar.dart';
 import '../../widgets/error_widget.dart';
 import '../../widgets/modern_action_button.dart';
 import '../../widgets/skeleton_loading.dart';
+import '../report/report_question_screen.dart';
 
-class FreeQuestionsScreen extends StatelessWidget {
+class FreeQuestionsScreen extends StatefulWidget {
   const FreeQuestionsScreen({super.key});
+
+  @override
+  State<FreeQuestionsScreen> createState() => _FreeQuestionsScreenState();
+}
+
+class _FreeQuestionsScreenState extends State<FreeQuestionsScreen> {
+  // Font size state for explanation text
+  double _explanationFontSize = AppConstants.defaultExplanationFontSize;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFontSize();
+  }
+
+  Future<void> _loadFontSize() async {
+    final storageService = getIt<StorageService>();
+    setState(() {
+      _explanationFontSize = storageService.getExplanationFontSize();
+    });
+  }
 
   void _showRefreshDialog(BuildContext context, FreeQuestionsViewModel vm) {
     showDialog(
@@ -505,7 +528,7 @@ class FreeQuestionsScreen extends StatelessWidget {
                     const Spacer(),
                     // TASK 1: Share Button
                     IconButton(
-                      icon: const Icon(Icons.share_rounded, size: 20),
+                      icon: const Icon(Icons.share_rounded, size: 15),
                       onPressed: () {
                         ShareUtils.shareResult(
                             questionText: vm.question!.question,
@@ -523,10 +546,10 @@ class FreeQuestionsScreen extends StatelessWidget {
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 4),
                     // Copy Button
                     IconButton(
-                      icon: const Icon(Icons.copy_rounded, size: 18),
+                      icon: const Icon(Icons.copy_rounded, size: 15),
                       onPressed: () async {
                         await ShareUtils.copyQuestionContent(
                           questionText: vm.question!.question,
@@ -553,6 +576,33 @@ class FreeQuestionsScreen extends StatelessWidget {
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
                     ),
+                    const SizedBox(width: 4),
+                    // Report Button
+                    IconButton(
+                      icon: const Icon(Icons.flag_rounded, size: 15),
+                      onPressed: () async {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => ReportQuestionScreen(
+                              questionId: vm.question!.id,
+                              questionText: vm.question!.question,
+                              category: vm.question!.category,
+                              source: 'free',
+                            ),
+                          ),
+                        );
+                      },
+                      tooltip: 'إبلاغ',
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                      color: AppColors.warning,
+                      style: IconButton.styleFrom(
+                        backgroundColor: AppColors.warning.withOpacity(0.1),
+                        padding: const EdgeInsets.all(8),
+                        minimumSize: const Size(32, 32),
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 12),
@@ -560,6 +610,7 @@ class FreeQuestionsScreen extends StatelessWidget {
                   vm.question!.explanation,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         height: 1.5,
+                       fontSize: _explanationFontSize,
                       ),
                 ),
               ],

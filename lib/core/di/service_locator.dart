@@ -13,6 +13,7 @@ import '../../data/repositories/question_repository.dart';
 import '../../data/repositories/leaderboard_repository.dart';
 import '../../data/repositories/comment_repository.dart';
 import '../../data/repositories/profile_repository.dart';
+import '../../data/repositories/report_repository.dart';
 import '../../viewmodels/theme_viewmodel.dart';
 import '../../viewmodels/auth_viewmodel.dart';
 import '../../viewmodels/daily_question_viewmodel.dart';
@@ -20,6 +21,7 @@ import '../../viewmodels/free_questions_viewmodel.dart';
 import '../../viewmodels/leaderboard_viewmodel.dart';
 import '../../viewmodels/profile_viewmodel.dart';
 import '../../viewmodels/comment_viewmodel.dart';
+import '../../viewmodels/report_viewmodel.dart';
 
 final getIt = GetIt.instance;
 
@@ -78,6 +80,9 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<ProfileRepository>(
     () => ProfileRepository(getIt<ApiService>(), getIt<StorageService>()),
   );
+  getIt.registerLazySingleton<ReportRepository>(
+    () => ReportRepository(getIt<ApiService>()),
+  );
   
   // ViewModels
   getIt.registerLazySingleton<ThemeViewModel>(
@@ -118,5 +123,8 @@ Future<void> setupServiceLocator() async {
       getIt<AuthRepository>(),
       getIt<NetworkService>(),
     ),
+  );
+  getIt.registerFactory<ReportViewModel>(
+    () => ReportViewModel(getIt<ReportRepository>()),
   );
 }

@@ -3,7 +3,7 @@ class AppConstants {
   static const String googlePlayUrl = 'https://play.google.com/store/apps/details?id=fact.or.myth';
   static const String iosUrl = 'https://play.google.com/store/apps/details?id=fact.or.myth';
 
-  // API Base URL - CHANGE THIS TO YOUR SERVER
+  // API Base URL
   static const String baseUrl = 'https://post.walid-fekry.com/fact-or-myth/api';
   
   // Storage Keys - User Session
@@ -31,6 +31,23 @@ class AppConstants {
   // Storage Keys - Notifications
   static const String keyNotificationPermissionShown = 'notification_permission_shown';
   static const String keyNotificationsEnabled = 'notifications_enabled';
+
+  // Storage Keys - UI Preferences
+  static const String keyExplanationFontSize = 'explanation_font_size';
+  
+  // Font Size Limits
+  static const double minExplanationFontSize = 12.0;
+  static const double defaultExplanationFontSize = 16.0;
+  static const double maxExplanationFontSize = 30.0;
+  
+  // Report Reasons
+  static const List<String> reportReasons = [
+    'إجابة خاطئة',
+    'شرح خاطئ',
+    'خطأ إملائي',
+    'سؤال خاطئ',
+    'أخرى',
+  ];
   
   // Categories
   static const List<String> categories = [
@@ -88,17 +105,6 @@ class AppConstants {
     '👨‍🔬',
     '👩‍🔬',
   ];
-  
-  // Leaderboard
-  static const int minAnswersForLeaderboard = 5;
-  static const int leaderboardTopCount = 100;
-  
-  // Messages
-  static const String msgCorrectAnswer = 'جاوبت صح! شوف ترتيبك 🔥';
-  static const String msgWrongAnswer = 'مش لوحدك 😅 شوف ترتيب الناس';
-  static const String msgNextQuestion = 'السؤال الجديد بعد:';
-  static const String msgNewQuestion = 'سؤال جديد';
-  static const String msgLoginRequired = 'يجب تسجيل الدخول أولاً';
 
   // Smart feedback messages
   static final List<String> correctMessages = [

@@ -114,7 +114,7 @@ class StorageService {
     };
   }
 
-  // TASK 3: Daily Question Caching (1 hour)
+  // Daily Question Caching (1 hour)
   Future<void> cacheDailyQuestion(dynamic question, DateTime timestamp) async {
     final questionJson = question is Map<String, dynamic> 
         ? question 
@@ -143,7 +143,7 @@ class StorageService {
     await _prefs.remove(AppConstants.keyCachedDailyQuestionTimestamp);
   }
 
-  // TASK 1: Save Daily Question Answer State (CRITICAL)
+  // Save Daily Question Answer State (CRITICAL)
   Future<void> saveDailyQuestionAnswer({
     required int questionId,
     required bool selectedAnswer,
@@ -169,7 +169,7 @@ class StorageService {
     await _prefs.setString(AppConstants.keyDailyQuestionAnswer, jsonEncode(answerData));
   }
 
-  // TASK 2: Load Daily Question Answer State
+  // Load Daily Question Answer State
   Map<String, dynamic>? getDailyQuestionAnswer() {
     final answerStr = _prefs.getString(AppConstants.keyDailyQuestionAnswer);
     
@@ -179,7 +179,7 @@ class StorageService {
 
     final answerData = jsonDecode(answerStr) as Map<String, dynamic>;
     
-    // TASK 3: Check if answer is from today
+    // Check if answer is from today
     final savedDate = answerData['date'] as String?;
     final today = DateTime.now().toIso8601String().split('T')[0];
     
@@ -196,13 +196,7 @@ class StorageService {
     await _prefs.remove(AppConstants.keyDailyQuestionAnswer);
   }
 
-  // Check if answer is from today
-  bool isDailyQuestionAnsweredToday() {
-    final answerData = getDailyQuestionAnswer();
-    return answerData != null && answerData['answered'] == true;
-  }
-
-  // TASK 1: Clear ALL user-related data (for logout/delete account)
+  // Clear ALL user-related data (for logout/delete account)
   Future<void> clearAllUserData() async {
     // Clear user session
     await clearUser();
@@ -223,7 +217,7 @@ class StorageService {
     // as they are user preferences, not session data
   }
 
-  // TASK 1: Clear only session data (keep preferences like theme, sound)
+  // Clear only session data (keep preferences like theme, sound)
   Future<void> clearSessionData() async {
     // Clear user session
     await clearUser();
@@ -238,7 +232,7 @@ class StorageService {
     await clearGuestAnswer();
   }
 
-  // TASK 1: Nuclear option - clear EVERYTHING (for testing/debugging)
+  // clear EVERYTHING (for testing/debugging)
   Future<void> clearEverything() async {
     await _prefs.clear();
   }
@@ -248,15 +242,21 @@ class StorageService {
     await _prefs.setBool(AppConstants.keyNotificationPermissionShown, shown);
   }
 
-  bool hasNotificationPermissionBeenShown() {
-    return _prefs.getBool(AppConstants.keyNotificationPermissionShown) ?? false;
-  }
-
   Future<void> setNotificationsEnabled(bool enabled) async {
     await _prefs.setBool(AppConstants.keyNotificationsEnabled, enabled);
   }
 
   bool areNotificationsEnabled() {
     return _prefs.getBool(AppConstants.keyNotificationsEnabled) ?? false;
+  }
+  
+  // Explanation Font Size
+  Future<void> saveExplanationFontSize(double size) async {
+    await _prefs.setDouble(AppConstants.keyExplanationFontSize, size);
+  }
+
+  double getExplanationFontSize() {
+    return _prefs.getDouble(AppConstants.keyExplanationFontSize) ?? 
+           AppConstants.defaultExplanationFontSize;
   }
 }

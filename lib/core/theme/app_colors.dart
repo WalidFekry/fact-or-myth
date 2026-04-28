@@ -55,7 +55,6 @@ class AppColors {
   static const Color bronze = Color(0xFFCD7F32);
   
   // Social Media Brand Colors
-  static const Color facebook = Color(0xFF1877F2);
   static const Color whatsapp = Color(0xFF25D366);
   
   // Dividers (Low contrast)

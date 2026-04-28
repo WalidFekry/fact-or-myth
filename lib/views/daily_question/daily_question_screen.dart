@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/constants/app_constants.dart';
 import '../../core/constants/assets.dart';
 import '../../core/di/service_locator.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/utils/share_utils.dart';
 import '../../data/services/sound_service.dart';
+import '../../data/services/storage_service.dart';
 import '../../viewmodels/auth_viewmodel.dart';
 import '../../viewmodels/daily_question_viewmodel.dart';
 import '../../viewmodels/theme_viewmodel.dart';
@@ -18,6 +20,7 @@ import '../../widgets/skeleton_loading.dart';
 import '../../widgets/voting_stats_widget.dart';
 import '../about/about_screen.dart';
 import '../onboarding/onboarding_screen.dart';
+import '../report/report_question_screen.dart';
 import 'comments_screen.dart';
 
 class DailyQuestionScreen extends StatefulWidget {
@@ -28,7 +31,46 @@ class DailyQuestionScreen extends StatefulWidget {
 }
 
 class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
-  // TASK 2: Handle force logout
+  // Font size state for explanation text
+  double _explanationFontSize = AppConstants.defaultExplanationFontSize;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFontSize();
+  }
+
+  Future<void> _loadFontSize() async {
+    final storageService = getIt<StorageService>();
+    setState(() {
+      _explanationFontSize = storageService.getExplanationFontSize();
+    });
+  }
+
+  void _increaseFontSize() {
+    if (_explanationFontSize < AppConstants.maxExplanationFontSize) {
+      setState(() {
+        _explanationFontSize += 2;
+      });
+      _saveFontSize();
+    }
+  }
+
+  void _decreaseFontSize() {
+    if (_explanationFontSize > AppConstants.minExplanationFontSize) {
+      setState(() {
+        _explanationFontSize -= 2;
+      });
+      _saveFontSize();
+    }
+  }
+
+  Future<void> _saveFontSize() async {
+    final storageService = getIt<StorageService>();
+    await storageService.saveExplanationFontSize(_explanationFontSize);
+  }
+
+  // Handle force logout
   void _handleForceLogout(BuildContext context) async {
     final authVM = context.read<AuthViewModel>();
     await authVM.logout();
@@ -116,7 +158,7 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
         body: SafeArea(
           child: Consumer<DailyQuestionViewModel>(
             builder: (context, vm, _) {
-              // TASK 2: Handle force_logout
+              // Handle force_logout
               if (vm.error == 'force_logout') {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   _handleForceLogout(context);
@@ -193,19 +235,17 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
           // Dynamic Greeting (only show before answering)
           if (!vm.hasAnswered) ...[
             _buildGreetingSection(context),
-            const SizedBox(height: 14),
+            const SizedBox(height: 10),
           ],
-
           // Question Card
-          _buildQuestionCard(context, vm), const SizedBox(height: 14),
-
+          _buildQuestionCard(context, vm), const SizedBox(height: 10),
           // Answer Buttons or Result
           if (!vm.hasAnswered)
             _buildAnswerButtons(vm)
           else
             _buildResultSection(context, vm), // Countdown Timer if answered)
           if (vm.nextQuestionTime != null) ...[
-            const SizedBox(height: 14),
+            const SizedBox(height: 12),
             CountdownTimer(targetTime: vm.nextQuestionTime!),
           ],
         ],
@@ -265,9 +305,12 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
   Widget _buildQuestionCard(BuildContext context, DailyQuestionViewModel vm) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(15),
         child: Column(
           children: [
+            // Category Chip
+            _buildCategoryChip(vm.question!.category),
+            const SizedBox(height: 10),
             // Question Icon
             Container(
               width: 48,
@@ -282,8 +325,7 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
                 size: 24,
               ),
             ),
-            const SizedBox(height: 16),
-
+            const SizedBox(height: 10),
             // Question Text
             Text(
               vm.question!.question,
@@ -294,6 +336,38 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildCategoryChip(String category) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: AppColors.primaryDark.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: AppColors.primaryDark.withOpacity(0.3),
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(
+            Icons.category_rounded,
+            size: 14,
+            color: AppColors.primaryDark,
+          ),
+          const SizedBox(width: 6),
+          Text(
+            category,
+            style: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: AppColors.primaryDark,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -390,29 +464,22 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
           isSelected: vm.userAnswer == false,
           correctAnswer: vm.question!.correctAnswer,
         ),
-        const SizedBox(height: 20),
-
+        const SizedBox(height: 12),
         // Result Message
         if (vm.isCorrect != null && vm.resultMessage != null)
           _buildResultMessage(context, vm),
-
         if (vm.isCorrect != null && vm.resultMessage != null)
-          const SizedBox(height: 16),
-
+          const SizedBox(height: 12),
         // Explanation Card
         _buildExplanationCard(context, vm),
-
-        const SizedBox(height: 16),
-
+        const SizedBox(height: 12),
         // Voting Statistics
         if (vm.question!.totalVotes > 0)
           VotingStatsWidget(
             trueVotes: vm.question!.trueVotes,
             falseVotes: vm.question!.falseVotes,
           ),
-
-        if (vm.question!.totalVotes > 0) const SizedBox(height: 16),
-
+        if (vm.question!.totalVotes > 0) const SizedBox(height: 12),
         // Action Buttons
         Consumer<AuthViewModel>(
           builder: (context, authVM, _) {
@@ -462,7 +529,6 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
                 ),
               );
             }
-
             return ModernActionButton(
               icon: Icons.comment_rounded,
               label: 'التعليقات',
@@ -503,7 +569,7 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
               child: Text(
                 vm.resultMessage!,
                 style: const TextStyle(
-                  fontSize: 15,
+                  fontSize: 16,
                   fontWeight: FontWeight.w600,
                   color: AppColors.pureWhite,
                 ),
@@ -544,6 +610,28 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
                         fontSize: 16,
                       ),
                 ),
+                const Spacer(),
+                // Font Size Controls
+                _buildFontSizeButton(
+                  icon: Icons.text_decrease_rounded,
+                  label: 'A-',
+                  onTap: _decreaseFontSize,
+                  enabled: _explanationFontSize >
+                      AppConstants.minExplanationFontSize,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  '${_explanationFontSize.toInt()}',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                const SizedBox(width: 8),
+                _buildFontSizeButton(
+                  icon: Icons.text_increase_rounded,
+                  label: 'A+',
+                  onTap: _increaseFontSize,
+                  enabled: _explanationFontSize <
+                      AppConstants.maxExplanationFontSize,
+                ),
               ],
             ),
             const SizedBox(height: 12),
@@ -551,10 +639,11 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
               vm.question!.explanation,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     height: 1.5,
+                    fontSize: _explanationFontSize,
                   ),
             ),
             const SizedBox(height: 16),
-            // TASK 4: Share & Copy Buttons
+            // Action Buttons Row
             Row(
               children: [
                 Expanded(
@@ -572,7 +661,7 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
                     },
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 8),
                 Expanded(
                   child: _buildIconButton(
                     context,
@@ -595,7 +684,86 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
                     },
                   ),
                 ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: _buildIconButton(
+                    context,
+                    icon: Icons.flag_rounded,
+                    label: 'إبلاغ',
+                    color: AppColors.warning,
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => ReportQuestionScreen(
+                            questionId: vm.question!.id,
+                            questionText: vm.question!.question,
+                            category: vm.question!.category,
+                            source: 'daily',
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
               ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFontSizeButton({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+    required bool enabled,
+  }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return InkWell(
+      onTap: enabled ? onTap : null,
+      borderRadius: BorderRadius.circular(6),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: enabled
+              ? (isDark ? AppColors.surfaceDark : AppColors.surfaceLight)
+              : (isDark
+                  ? AppColors.surfaceDark.withOpacity(0.5)
+                  : AppColors.surfaceLight.withOpacity(0.5)),
+          borderRadius: BorderRadius.circular(6),
+          border: Border.all(
+            color: enabled
+                ? AppColors.primaryDark.withOpacity(0.3)
+                : (isDark ? AppColors.dividerDark : AppColors.dividerLight),
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              size: 14,
+              color: enabled
+                  ? AppColors.primaryDark
+                  : (isDark
+                      ? AppColors.textTertiaryDark
+                      : AppColors.textTertiaryLight),
+            ),
+            const SizedBox(width: 2),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: enabled
+                    ? AppColors.primaryDark
+                    : (isDark
+                        ? AppColors.textTertiaryDark
+                        : AppColors.textTertiaryLight),
+              ),
             ),
           ],
         ),
@@ -608,26 +776,32 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
     required IconData icon,
     required String label,
     required VoidCallback onTap,
+    Color? color,
   }) {
+    final buttonColor = color ?? AppColors.primaryDark;
+
     return Material(
-      color: AppColors.primaryDark.withOpacity(0.1),
+      color: buttonColor.withOpacity(0.1),
       borderRadius: BorderRadius.circular(10),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(10),
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, color: AppColors.primaryDark, size: 18),
-              const SizedBox(width: 8),
-              Text(
-                label,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.primaryDark,
+              Icon(icon, color: buttonColor, size: 16),
+              const SizedBox(width: 6),
+              Flexible(
+                child: Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: buttonColor,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
@@ -636,6 +810,4 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
       ),
     );
   }
-
-
 }
