@@ -31,7 +31,8 @@ class _CountdownTimerState extends State<CountdownTimer> {
 
   void _updateRemaining() {
     setState(() {
-      _remaining = widget.targetTime.difference(DateTime.now());
+      final nowUtc = DateTime.now().toUtc();
+      _remaining = widget.targetTime.difference(nowUtc);
       if (_remaining.isNegative) {
         _remaining = Duration.zero;
         _timer?.cancel();

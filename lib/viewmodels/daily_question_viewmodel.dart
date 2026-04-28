@@ -325,7 +325,7 @@ class DailyQuestionViewModel extends ChangeNotifier {
       isCorrect: _isCorrect!,
     );
     
-    // TASK 1: Also save to daily question answer storage (new format)
+    // Also save to daily question answer storage (new format)
     storageService.saveDailyQuestionAnswer(
       questionId: _question!.id,
       selectedAnswer: answer,
@@ -341,12 +341,17 @@ class DailyQuestionViewModel extends ChangeNotifier {
   }
 
   void _calculateNextQuestionTime() {
-    final now = DateTime.now();
-    _nextQuestionTime = DateTime(now.year, now.month, now.day + 1);
+    final startUtc = DateTime.utc(2026, 4, 1, 0, 0, 0);
+    final nowUtc = DateTime.now().toUtc();
+
+    final secondsPassed =
+        nowUtc.difference(startUtc).inSeconds;
+
+    final currentDay = secondsPassed ~/ 86400;
+
+    _nextQuestionTime = startUtc.add(
+      Duration(seconds: (currentDay + 1) * 86400),
+    );
   }
 
-  Duration? getTimeUntilNextQuestion() {
-    if (_nextQuestionTime == null) return null;
-    return _nextQuestionTime!.difference(DateTime.now());
-  }
 }
