@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![App Logo](assets/icons/logo.png)
+![App Logo](assets/icons/logo_512.png)
 
 **Daily Interactive Quiz App - اختبر معلوماتك يوميًا**
 
