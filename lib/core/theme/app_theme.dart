@@ -26,7 +26,7 @@ class AppTheme {
         onError: AppColors.pureWhite,
       ),
       
-      appBarTheme: AppBarTheme(
+      appBarTheme: const AppBarTheme(
         backgroundColor: AppColors.backgroundDark,
         elevation: 0,
         centerTitle: false,
@@ -192,7 +192,7 @@ class AppTheme {
       chipTheme: ChipThemeData(
         backgroundColor: AppColors.cardDark,
         selectedColor: AppColors.primaryDark,
-        labelStyle: TextStyle(
+        labelStyle: const TextStyle(
           fontFamily: fontFamily,
           color: AppColors.textSecondaryDark,
           fontSize: 13,
@@ -204,7 +204,7 @@ class AppTheme {
         ),
       ),
       
-      dividerTheme: DividerThemeData(
+      dividerTheme: const DividerThemeData(
         color: AppColors.dividerDark,
         thickness: 1,
         space: 16,
@@ -232,7 +232,7 @@ class AppTheme {
         onError: AppColors.pureWhite,
       ),
       
-      appBarTheme: AppBarTheme(
+      appBarTheme: const AppBarTheme(
         backgroundColor: AppColors.backgroundLight,
         elevation: 0,
         centerTitle: false,
