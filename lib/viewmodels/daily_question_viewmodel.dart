@@ -1,5 +1,6 @@
 import 'package:fact_or_myth/core/constants/app_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'dart:math';
 import '../data/models/question_model.dart';
 import '../data/repositories/question_repository.dart';
@@ -52,6 +53,13 @@ class DailyQuestionViewModel extends ChangeNotifier {
   Future<void> _checkConnectivity() async {
     _isOnline = await _networkService.isConnected();
     notifyListeners();
+  }
+
+  Future<void> _showInAppReview() async {
+    final InAppReview inAppReview = InAppReview.instance;
+    if (await inAppReview.isAvailable()) {
+      inAppReview.requestReview();
+    }
   }
 
   Future<void> loadDailyQuestion() async {
@@ -221,7 +229,7 @@ class DailyQuestionViewModel extends ChangeNotifier {
         );
       }
       
-      // TASK 1: Save answer state locally (CRITICAL)
+      // Save answer state locally (CRITICAL)
       final storageService = getIt<StorageService>();
       await storageService.saveDailyQuestionAnswer(
         questionId: _question!.id,
@@ -232,8 +240,10 @@ class DailyQuestionViewModel extends ChangeNotifier {
         trueVotes: trueVotes,
         falseVotes: falseVotes,
       );
-      
+
       _calculateNextQuestionTime();
+      _showInAppReview();
+
       _isLoading = false;
       notifyListeners();
     } catch (e) {
