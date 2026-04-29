@@ -62,6 +62,7 @@ flutter:
   assets:
     - assets/icons/
     - assets/sounds/
+    - assets/images/
   
   fonts:
     - family: Somar
