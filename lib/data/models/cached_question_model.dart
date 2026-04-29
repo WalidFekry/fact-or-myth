@@ -31,7 +31,7 @@ class CachedQuestionModel extends HiveObject {
     return CachedQuestionModel(
       id: int.parse(json['id'].toString()),
       question: json['question'] ?? '',
-      correctAnswer: json['correct_answer'] == '1' || json['correct_answer'] == true,
+      correctAnswer: json['correct_answer'] == 1 || json['correct_answer'] == true,
       explanation: json['explanation'] ?? '',
       category: json['category'] ?? 'عشوائي',
     );
