@@ -31,6 +31,9 @@ class AppConstants {
   // Storage Keys - Notifications
   static const String keyNotificationPermissionShown = 'notification_permission_shown';
   static const String keyNotificationsEnabled = 'notifications_enabled';
+  
+  // Storage Keys - Tracking (iOS)
+  static const String keyTrackingPermissionShown = 'tracking_permission_shown';
 
   // Storage Keys - UI Preferences
   static const String keyExplanationFontSize = 'explanation_font_size';

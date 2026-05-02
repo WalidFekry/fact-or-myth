@@ -250,6 +250,15 @@ class StorageService {
     return _prefs.getBool(AppConstants.keyNotificationsEnabled) ?? false;
   }
   
+  // Tracking Permission (iOS)
+  Future<void> setTrackingPermissionShown(bool shown) async {
+    await _prefs.setBool(AppConstants.keyTrackingPermissionShown, shown);
+  }
+  
+  bool isTrackingPermissionShown() {
+    return _prefs.getBool(AppConstants.keyTrackingPermissionShown) ?? false;
+  }
+  
   // Explanation Font Size
   Future<void> saveExplanationFontSize(double size) async {
     await _prefs.setDouble(AppConstants.keyExplanationFontSize, size);

@@ -1,9 +1,11 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/di/service_locator.dart';
 import '../../data/services/notification_service.dart';
 import '../../data/services/storage_service.dart';
 import '../home/home_screen.dart';
+import '../tracking_permission/tracking_permission_screen.dart';
 
 class NotificationPermissionScreen extends StatefulWidget {
   const NotificationPermissionScreen({super.key});
@@ -36,10 +38,16 @@ class _NotificationPermissionScreenState extends State<NotificationPermissionScr
         await storageService.setNotificationsEnabled(true);
 
         if (mounted) {
-          // Navigate to home
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => const HomeScreen()),
-          );
+          // Navigate to tracking permission on iOS, or home on Android
+          if (Platform.isIOS && !storageService.isTrackingPermissionShown()) {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (_) => const TrackingPermissionScreen()),
+            );
+          } else {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (_) => const HomeScreen()),
+            );
+          }
         }
       } else {
         // Permission denied
@@ -54,10 +62,16 @@ class _NotificationPermissionScreenState extends State<NotificationPermissionScr
             ),
           );
 
-          // Still navigate to home
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => const HomeScreen()),
-          );
+          // Still navigate to next screen
+          if (Platform.isIOS && !storageService.isTrackingPermissionShown()) {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (_) => const TrackingPermissionScreen()),
+            );
+          } else {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (_) => const HomeScreen()),
+            );
+          }
         }
       }
     } catch (e) {
@@ -86,9 +100,16 @@ class _NotificationPermissionScreenState extends State<NotificationPermissionScr
     await storageService.setNotificationsEnabled(false);
 
     if (mounted) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
-      );
+      // Navigate to tracking permission on iOS, or home on Android
+      if (Platform.isIOS && !storageService.isTrackingPermissionShown()) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const TrackingPermissionScreen()),
+        );
+      } else {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const HomeScreen()),
+        );
+      }
     }
   }
 

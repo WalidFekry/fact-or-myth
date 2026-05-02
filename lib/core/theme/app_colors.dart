@@ -61,6 +61,10 @@ class AppColors {
   static const Color dividerDark = Color(0xFF2A2A2A);
   static const Color dividerLight = Color(0xFFE8E8E8);
   
+  // Borders (Subtle borders for containers)
+  static const Color borderDark = Color(0xFF2A2A2A);
+  static const Color borderLight = Color(0xFFE0E0E0);
+  
   // Overlay Colors (for modals, shadows)
   static const Color overlayDark = Color(0xCC000000); // 80% black
   static const Color overlayLight = Color(0x66000000); // 40% black

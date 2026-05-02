@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:fact_or_myth/viewmodels/auth_viewmodel.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -12,11 +13,13 @@ import 'core/constants/app_constants.dart';
 import 'core/di/service_locator.dart';
 import 'core/theme/app_theme.dart';
 import 'data/services/notification_service.dart';
+import 'data/services/storage_service.dart';
 import 'firebase_options.dart';
 import 'viewmodels/theme_viewmodel.dart';
 import 'views/onboarding/onboarding_screen.dart';
 import 'views/home/home_screen.dart';
 import 'views/notification_permission/notification_permission_screen.dart';
+import 'views/tracking_permission/tracking_permission_screen.dart';
 
 // Background message handler (must be top-level)
 @pragma('vm:entry-point')
@@ -135,8 +138,11 @@ class _InitialScreenState extends State<InitialScreen> {
 
   Future<void> _checkFirstTime() async {
     final prefs = await SharedPreferences.getInstance();
+    final storageService = getIt<StorageService>();
+    
     final isFirstTime = prefs.getBool(AppConstants.keyIsFirstTime) ?? true;
     final notificationPermissionShown = prefs.getBool(AppConstants.keyNotificationPermissionShown) ?? false;
+    final trackingPermissionShown = storageService.isTrackingPermissionShown();
     
     if (mounted) {
       if (isFirstTime) {
@@ -148,6 +154,11 @@ class _InitialScreenState extends State<InitialScreen> {
         // Not first time but notification permission not shown yet
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (_) => const NotificationPermissionScreen()),
+        );
+      } else if (Platform.isIOS && !trackingPermissionShown) {
+        // iOS only: Show tracking permission if not shown yet
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const TrackingPermissionScreen()),
         );
       } else {
         // Normal flow - go to home

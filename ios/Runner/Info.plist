@@ -70,5 +70,33 @@
 		<true/>
 		<key>UIViewControllerBasedStatusBarAppearance</key>
 		<false/>
+		
+		<!-- App Tracking Transparency -->
+		<key>NSUserTrackingUsageDescription</key>
+		<string>نستخدم التتبع لتقديم إعلانات أكثر ملاءمة وتحسين تجربتك داخل التطبيق.</string>
+
+		<!-- Push Notifications -->
+		<key>UIBackgroundModes</key>
+		<array>
+			<string>fetch</string>
+			<string>remote-notification</string>
+		</array>
+		
+		<!-- Network Usage -->
+		<key>NSAppTransportSecurity</key>
+		<dict>
+			<key>NSAllowsArbitraryLoads</key>
+			<false/>
+			<key>NSAllowsArbitraryLoadsInWebContent</key>
+			<false/>
+		</dict>
+		
+		<!-- Performance Optimization -->
+		<key>UIApplicationSupportsIndirectInputEvents</key>
+		<true/>
+		
+		<!-- Minimum iOS Version -->
+		<key>MinimumOSVersion</key>
+		<string>13.0</string>
 	</dict>
 </plist>
