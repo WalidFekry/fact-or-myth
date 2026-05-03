@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![App Logo](assets/icons/logo_512.png)
+<img src="assets/icons/app_logo.png" width="150" height="150" alt="App Logo" />
 
 **Daily Interactive Quiz App - اختبر معلوماتك يوميًا**
 
@@ -18,7 +18,7 @@
 
 ## 📱 About
 
-**حقيقة ولا خرافة؟** (Fact or Myth?) is an engaging Arabic-first mobile quiz application that challenges users to distinguish between facts and myths through daily interactive questions.
+**حقيقة ولا خرافة؟** (?Fact or Myth) is an engaging Arabic-first mobile quiz application that challenges users to distinguish between facts and myths through daily interactive questions.
 
 ### 🎯 Core Concept
 - Daily question system with streak tracking
@@ -120,15 +120,14 @@
 
 | Home Screen | Daily Question | Leaderboard | Profile |
 |------------|----------------|-------------|---------|
-| ![Home](screenshots/home.png) | ![Question](screenshots/question.png) | ![Leaderboard](screenshots/leaderboard.png) | ![Profile](screenshots/profile.png) |
+| ![Home](assets/screenshots/home.png) | ![Question](assets/screenshots/question.png) | ![Leaderboard](assets/screenshots/leaderboard.png) | ![Profile](assets/screenshots/profile.png) |
 
-| Free Questions | Comments | Onboarding | Notifications |
+| Free Questions | Comments | Report | About |
 |----------------|----------|------------|---------------|
-| ![Free](screenshots/free.png) | ![Comments](screenshots/comments.png) | ![Onboarding](screenshots/onboarding.png) | ![Notifications](screenshots/notifications.png) |
+| ![Free](assets/screenshots/free.png) | ![Comments](assets/screenshots/comments.png) | ![Report](assets/screenshots/report.png) | ![About](assets/screenshots/about.png) |
 
 </div>
 
-> **Note:** Add actual screenshots to `screenshots/` directory
 
 ---
 
@@ -147,35 +146,7 @@
 - **Firebase Messaging:** Push notifications
 - **Firebase Crashlytics:** Crash reporting & monitoring
 - **Firebase Analytics:** User behavior tracking
-
-### Key Packages
-```yaml
-dependencies:
-  # State Management
-  provider: ^6.1.1
-  get_it: ^7.6.4
   
-  # Networking
-  dio: ^5.4.0
-  connectivity_plus: ^5.0.2
-  
-  # Storage
-  shared_preferences: ^2.2.2
-  hive: ^2.2.3
-  
-  # Firebase
-  firebase_core: ^4.7.0
-  firebase_messaging: ^16.2.0
-  firebase_crashlytics: ^5.2.0
-  firebase_analytics: ^12.3.0
-  
-  # UI/UX
-  shimmer: ^3.0.0
-  audioplayers: ^5.2.1
-  share_plus: ^7.2.1
-  url_launcher: ^6.2.2
-```
-
 ---
 
 ## 🚀 Setup
@@ -190,8 +161,8 @@ dependencies:
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/haqeeqa-wala-khorafa.git
-   cd haqeeqa-wala-khorafa
+   git clone https://github.com/WalidFekry/fact-or-myth.git
+   cd fact-or-myth
    ```
 
 2. **Install dependencies**
@@ -236,35 +207,6 @@ Output: `build/app/outputs/flutter-apk/app-release.apk`
 
 ---
 
-## 🏗 Architecture
-
-### MVVM Pattern
-
-```
-lib/
-├── core/
-│   ├── constants/        # App constants
-│   ├── di/              # Dependency injection
-│   ├── network/         # API client & exceptions
-│   ├── theme/           # App theme & colors
-│   └── utils/           # Utility functions
-├── data/
-│   ├── models/          # Data models
-│   ├── repositories/    # Data repositories
-│   └── services/        # Services (API, Storage, etc.)
-├── viewmodels/          # Business logic (ViewModels)
-├── views/               # UI screens
-│   ├── daily_question/
-│   ├── free_questions/
-│   ├── leaderboard/
-│   ├── profile/
-│   ├── onboarding/
-│   └── notification_permission/
-├── widgets/             # Reusable widgets
-├── firebase_options.dart
-└── main.dart
-```
-
 ### Key Design Patterns
 - **MVVM:** Separation of UI and business logic
 - **Repository Pattern:** Data abstraction layer
@@ -296,123 +238,6 @@ lib/
 
 ---
 
-## 📦 Project Structure
-
-### Core Components
-
-#### Services
-- **ApiService:** HTTP requests with Dio
-- **StorageService:** Local data persistence
-- **NotificationService:** FCM integration
-- **SoundService:** Audio feedback
-- **NetworkService:** Connectivity checking
-- **OfflineStorageService:** Hive-based caching
-
-#### Repositories
-- **AuthRepository:** User authentication
-- **QuestionRepository:** Question data management
-- **LeaderboardRepository:** Ranking data
-- **CommentRepository:** Comments management
-- **ProfileRepository:** User profile data
-
-#### ViewModels
-- **AuthViewModel:** Authentication state
-- **DailyQuestionViewModel:** Daily question logic
-- **FreeQuestionsViewModel:** Free quiz logic
-- **LeaderboardViewModel:** Ranking logic
-- **ProfileViewModel:** Profile management
-- **CommentViewModel:** Comments logic
-- **ThemeViewModel:** Theme management
-
----
-
-## 🎨 Design System
-
-### Colors
-```dart
-Primary: #5B7FFF
-Success: #4CAF50
-Error: #F44336
-Warning: #FF9800
-Dark Background: #121212
-Surface: #1E1E1E
-```
-
-### Typography
-- **Font Family:** Somar (Arabic-optimized)
-- **Weights:** Regular (400), Medium (500), Bold (700)
-- **Sizes:** 12px - 24px (max)
-
-### Spacing
-- **Grid System:** 8dp base unit
-- **Padding:** 4, 8, 12, 16, 20, 24, 32, 48
-- **Border Radius:** 8, 12, 16, 24
-
----
-
-## 🔧 Configuration
-
-### Environment Variables
-Create `lib/core/constants/app_constants.dart`:
-
-```dart
-class AppConstants {
-  static const String apiBaseUrl = 'YOUR_API_URL';
-  static const String appName = 'حقيقة ولا خرافة؟';
-  static const String appVersion = '1.0.0';
-}
-```
-
-### Firebase Configuration
-- Automatic via `flutterfire configure`
-- Creates `lib/firebase_options.dart`
-- Platform-specific config files:
-  - Android: `android/app/google-services.json`
-  - iOS: `ios/Runner/GoogleService-Info.plist`
-
----
-
-## 🧪 Testing
-
-### Run Tests
-```bash
-# Unit tests
-flutter test
-
-# Integration tests
-flutter test integration_test/
-
-# Widget tests
-flutter test test/widget_test.dart
-```
-
-### Test Coverage
-```bash
-flutter test --coverage
-genhtml coverage/lcov.info -o coverage/html
-open coverage/html/index.html
-```
-
----
-
-## 📊 Performance
-
-### Optimization Techniques
-- **Lazy loading** for images and data
-- **Pagination** for leaderboard (50 users)
-- **Caching** for daily questions (1 hour)
-- **Offline support** for free questions
-- **Efficient state management** with Provider
-- **Image optimization** (compressed assets)
-- **Code splitting** with lazy imports
-
-### Metrics
-- **App Size:** ~50 MB (release APK)
-- **Cold Start:** < 2 seconds
-- **Hot Reload:** < 1 second
-- **Memory Usage:** < 150 MB average
-
----
 
 ## 🔐 Security
 
@@ -428,42 +253,6 @@ open coverage/html/index.html
 
 ---
 
-## 🚀 Production Checklist
-
-Before releasing to production:
-
-- [ ] Update version in `pubspec.yaml`
-- [ ] Update app name and package name
-- [ ] Configure Firebase for production
-- [ ] Enable Crashlytics
-- [ ] Test on multiple devices
-- [ ] Test offline functionality
-- [ ] Test push notifications
-- [ ] Optimize images
-- [ ] Remove debug code
-- [ ] Update privacy policy
-- [ ] Test payment flows (if any)
-- [ ] Generate signed APK/AAB
-- [ ] Test release build
-- [ ] Prepare store listing
-
----
-
-## 📝 Release Notes
-
-### Version 1.0.0 (Current)
-- ✨ Initial release
-- 🎯 Daily question system
-- 🏆 Leaderboard with ranking
-- 🔥 Streak tracking
-- 💬 Comments system
-- 🔔 Push notifications
-- 🌙 Dark/Light mode
-- 📱 Offline support
-- 🎨 Modern UI/UX
-
----
-
 ## 🤝 Contributing
 
 This is a proprietary project. For contributions or suggestions, please contact the development team.
@@ -472,42 +261,24 @@ This is a proprietary project. For contributions or suggestions, please contact 
 
 ## 📄 License
 
-Copyright © 2024 حقيقة ولا خرافة؟. All rights reserved.
-
-This is proprietary software. Unauthorized copying, distribution, or modification is prohibited.
+Copyright © 2026 حقيقة ولا خرافة؟. All rights reserved.
 
 ---
 
-## 👨‍💻 Development Team
-
-- **Lead Developer:** [Your Name]
-- **UI/UX Designer:** [Designer Name]
-- **Backend Developer:** [Backend Dev Name]
-
----
 
 ## 📞 Support
 
 For issues, questions, or feedback:
-- **Email:** support@factormyth.com
-- **Website:** [Your Website]
-- **GitHub Issues:** [Issues Page]
-
+- **Email:** walid_fekry@hotmail.com
+- **Website:** [https://walid-fekry.com]
+  
 ---
 
-## 🙏 Acknowledgments
-
-- Flutter team for the amazing framework
-- Firebase for backend services
-- Community contributors
-- Beta testers
 
 ---
 
 <div align="center">
-
-**Made with ❤️ in Egypt**
-
-[Download on Google Play](#) • [Download on App Store](#)
+  
+[Download on Google Play](https://play.google.com/store/apps/details?id=fact.or.myth) • [Download on App Store](https://walid-fekry.com/fact-or-myth)
 
 </div>
