@@ -98,5 +98,26 @@
 		<!-- Minimum iOS Version -->
 		<key>MinimumOSVersion</key>
 		<string>13.0</string>
+
+		<!-- Deep Linking Configuration -->
+		<key>CFBundleURLTypes</key>
+		<array>
+			<dict>
+				<key>CFBundleTypeRole</key>
+				<string>Editor</string>
+				<key>CFBundleURLName</key>
+				<string>fact.or.myth</string>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>factormyth</string>
+				</array>
+			</dict>
+		</array>
+
+		<!-- Universal Links (HTTPS) -->
+		<key>com.apple.developer.associated-domains</key>
+		<array>
+			<string>applinks:walid-fekry.com</string>
+		</array>
 	</dict>
 </plist>
