@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../features/challenge/challenge_screen.dart';
 import '../../viewmodels/auth_viewmodel.dart';
 import '../../widgets/modern_bottom_nav.dart';
 import '../../widgets/register_dialog.dart';
@@ -21,6 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _screens = [
     const DailyQuestionScreen(),
     const FreeQuestionsScreen(),
+    const ChallengeScreen(),
     const LeaderboardScreen(),
     const ProfileScreen(),
   ];
@@ -29,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final authVM = context.read<AuthViewModel>();
     
     // Check if user needs to login for leaderboard or profile
-    if ((index == 2 || index == 3) && !authVM.isLoggedIn) {
+    if ((index == 3 || index == 4) && !authVM.isLoggedIn) {
       _showLoginRequired(index);
       return;
     }
