@@ -1,22 +1,22 @@
+import 'dart:math';
+
 import 'package:fact_or_myth/core/constants/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
-import 'dart:math';
-import '../data/models/question_model.dart';
-import '../data/repositories/question_repository.dart';
-import '../data/repositories/auth_repository.dart';
-import '../data/services/network_service.dart';
-import '../data/services/storage_service.dart';
+
 import '../core/di/service_locator.dart';
 import '../core/network/api_exception.dart';
+import '../data/models/question_model.dart';
+import '../data/repositories/auth_repository.dart';
+import '../data/repositories/question_repository.dart';
+import '../data/services/network_service.dart';
+import '../data/services/storage_service.dart';
 
 class DailyQuestionViewModel extends ChangeNotifier {
   final QuestionRepository _questionRepository;
   final AuthRepository _authRepository;
   final NetworkService _networkService;
   final Random _random = Random();
-
-
 
   bool _isLoading = false;
   String? _error;
@@ -44,7 +44,8 @@ class DailyQuestionViewModel extends ChangeNotifier {
   DateTime? get nextQuestionTime => _nextQuestionTime;
   bool get hasAnswered => _userAnswer != null;
   bool get isOnline => _isOnline;
-  bool get canSubmitAnswer => !_isLoading && _userAnswer == null && _question != null;
+  bool get canSubmitAnswer =>
+      !_isLoading && _userAnswer == null && _question != null;
 
   String _getRandomMessage(List<String> messages) {
     return messages[_random.nextInt(messages.length)];
@@ -66,7 +67,8 @@ class DailyQuestionViewModel extends ChangeNotifier {
     await _checkConnectivity();
 
     if (!_isOnline) {
-      _error = 'لا يوجد اتصال بالإنترنت 🌐\nالسؤال اليومي يتطلب اتصال بالإنترنت';
+      _error =
+          'لا يوجد اتصال بالإنترنت 🌐\nالسؤال اليومي يتطلب اتصال بالإنترنت';
       notifyListeners();
       return;
     }
@@ -78,75 +80,59 @@ class DailyQuestionViewModel extends ChangeNotifier {
     try {
       final userId = _authRepository.getUserId();
       _question = await _questionRepository.getDailyQuestion(userId);
-      
-      // TASK 5: Restore full answer state from local storage
+
+      // Restore full answer state from local storage
       final storageService = getIt<StorageService>();
       final localAnswer = storageService.getDailyQuestionAnswer();
-      
+
       if (localAnswer != null && localAnswer['question_id'] == _question!.id) {
         // Restore complete answer state
         _userAnswer = localAnswer['selected_answer'] as bool;
         _isCorrect = localAnswer['is_correct'] as bool;
-        _resultMessage = localAnswer['result_message'] as String? ?? 
-            (_isCorrect! 
+        _resultMessage = localAnswer['result_message'] as String? ??
+            (_isCorrect!
                 ? _getRandomMessage(AppConstants.correctMessages)
                 : _getRandomMessage(AppConstants.wrongMessages));
-        
-        // Update question with voting stats from local storage
-        if (localAnswer['true_votes'] != null && localAnswer['false_votes'] != null) {
-          _question = QuestionModel(
-            id: _question!.id,
-            question: _question!.question,
-            correctAnswer: _question!.correctAnswer,
-            explanation: _question!.explanation,
-            category: _question!.category,
-            isDaily: _question!.isDaily,
-            date: _question!.date,
-            userAnswer: _userAnswer,
-            isCorrect: _isCorrect,
-            trueVotes: localAnswer['true_votes'] as int,
-            falseVotes: localAnswer['false_votes'] as int,
-          );
-        }
-        
         _calculateNextQuestionTime();
       }
       // Fallback: Check if user has answered (from API response)
       else if (_question!.userAnswer != null) {
         _userAnswer = _question!.userAnswer;
         _isCorrect = _question!.isCorrect;
-        _resultMessage = _isCorrect! 
+        _resultMessage = _isCorrect!
             ? _getRandomMessage(AppConstants.correctMessages)
             : _getRandomMessage(AppConstants.wrongMessages);
         _calculateNextQuestionTime();
-      } 
+      }
       // Legacy: Check guest answer persistence (old format)
       else if (userId == null) {
         final guestAnswer = storageService.getGuestAnswer();
-        
-        if (guestAnswer != null && guestAnswer['question_id'] == _question!.id) {
+
+        if (guestAnswer != null &&
+            guestAnswer['question_id'] == _question!.id) {
           // Restore guest answer from legacy storage
           _userAnswer = guestAnswer['answer'];
           _isCorrect = guestAnswer['is_correct'];
-          _resultMessage = _isCorrect! 
+          _resultMessage = _isCorrect!
               ? _getRandomMessage(AppConstants.correctMessages)
               : _getRandomMessage(AppConstants.wrongMessages);
           _calculateNextQuestionTime();
         }
       }
-      
+
       _isLoading = false;
       notifyListeners();
     } catch (e) {
       final errorMessage = e.toString();
-      
-      // TASK 2: Handle force_logout from backend
-      if (errorMessage.contains('force_logout') || errorMessage.contains('المستخدم غير موجود')) {
+
+      // Handle force_logout from backend
+      if (errorMessage.contains('force_logout') ||
+          errorMessage.contains('المستخدم غير موجود')) {
         _error = 'force_logout'; // Special error code for UI to handle
       } else {
         _error = errorMessage;
       }
-      
+
       _isLoading = false;
       notifyListeners();
     }
@@ -172,7 +158,8 @@ class DailyQuestionViewModel extends ChangeNotifier {
     await _checkConnectivity();
 
     if (!_isOnline) {
-      _error = 'لا يوجد اتصال بالإنترنت 🌐\nيرجى الاتصال بالإنترنت لإرسال الإجابة';
+      _error =
+          'لا يوجد اتصال بالإنترنت 🌐\nيرجى الاتصال بالإنترنت لإرسال الإجابة';
       notifyListeners();
       return;
     }
@@ -191,7 +178,7 @@ class DailyQuestionViewModel extends ChangeNotifier {
 
       // Parse response with type safety
       _userAnswer = answer;
-      
+
       // Handle both int and bool types from backend
       final isCorrectValue = result['is_correct'];
       if (isCorrectValue is int) {
@@ -201,34 +188,23 @@ class DailyQuestionViewModel extends ChangeNotifier {
       } else {
         _isCorrect = false;
       }
-      
-      _resultMessage = _isCorrect! 
+
+      _resultMessage = _isCorrect!
           ? _getRandomMessage(AppConstants.correctMessages)
           : _getRandomMessage(AppConstants.wrongMessages);
-      
-      // Update voting statistics from response
-      int trueVotes = _question!.trueVotes;
-      int falseVotes = _question!.falseVotes;
-      
-      if (result['true_votes'] != null && result['false_votes'] != null) {
-        trueVotes = int.parse(result['true_votes'].toString());
-        falseVotes = int.parse(result['false_votes'].toString());
-        
+
         _question = QuestionModel(
           id: _question!.id,
           question: _question!.question,
           correctAnswer: _question!.correctAnswer,
           explanation: _question!.explanation,
           category: _question!.category,
-          isDaily: _question!.isDaily,
-          date: _question!.date,
           userAnswer: _userAnswer,
           isCorrect: _isCorrect,
-          trueVotes: trueVotes,
-          falseVotes: falseVotes,
+          trueVotes: _question!.trueVotes,
+          falseVotes: _question!.falseVotes,
         );
-      }
-      
+
       // Save answer state locally (CRITICAL)
       final storageService = getIt<StorageService>();
       await storageService.saveDailyQuestionAnswer(
@@ -237,8 +213,8 @@ class DailyQuestionViewModel extends ChangeNotifier {
         isCorrect: _isCorrect!,
         explanation: _question!.explanation,
         resultMessage: _resultMessage,
-        trueVotes: trueVotes,
-        falseVotes: falseVotes,
+        trueVotes: _question!.trueVotes,
+        falseVotes: _question!.falseVotes,
       );
 
       _calculateNextQuestionTime();
@@ -248,19 +224,18 @@ class DailyQuestionViewModel extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       final errorMessage = e.toString();
-      
+
       // TASK 6: Check if error is "already answered" with data
       if (errorMessage.contains('لقد أجبت على هذا السؤال اليوم') ||
           errorMessage.contains('already answered')) {
-        
         // Try to extract existing answer data from error
         // The ApiException should contain the data from backend
         if (e is ApiException && e.data != null) {
           final data = e.data as Map<String, dynamic>;
-          
+
           // Use existing answer data from backend
           _userAnswer = data['user_answer'] as bool? ?? answer;
-          
+
           final isCorrectValue = data['is_correct'];
           if (isCorrectValue is int) {
             _isCorrect = isCorrectValue == 1;
@@ -269,9 +244,9 @@ class DailyQuestionViewModel extends ChangeNotifier {
           } else {
             _isCorrect = answer == _question!.correctAnswer;
           }
-          
+
           _resultMessage = 'لقد أجبت على هذا السؤال مسبقاً';
-          
+
           // Update voting statistics if provided
           if (data['true_votes'] != null && data['false_votes'] != null) {
             _question = QuestionModel(
@@ -280,8 +255,6 @@ class DailyQuestionViewModel extends ChangeNotifier {
               correctAnswer: _question!.correctAnswer,
               explanation: _question!.explanation,
               category: _question!.category,
-              isDaily: _question!.isDaily,
-              date: _question!.date,
               userAnswer: _userAnswer,
               isCorrect: _isCorrect,
               trueVotes: int.parse(data['true_votes'].toString()),
@@ -294,7 +267,7 @@ class DailyQuestionViewModel extends ChangeNotifier {
           _isCorrect = answer == _question!.correctAnswer;
           _resultMessage = 'لقد أجبت على هذا السؤال مسبقاً';
         }
-        
+
         // TASK 1: Save answer state locally even for duplicate attempts
         final storageService = getIt<StorageService>();
         await storageService.saveDailyQuestionAnswer(
@@ -306,13 +279,13 @@ class DailyQuestionViewModel extends ChangeNotifier {
           trueVotes: _question!.trueVotes,
           falseVotes: _question!.falseVotes,
         );
-        
+
         _calculateNextQuestionTime();
         _error = null; // Clear error to show result UI
       } else {
         _error = errorMessage;
       }
-      
+
       _isLoading = false;
       notifyListeners();
     }
@@ -323,10 +296,10 @@ class DailyQuestionViewModel extends ChangeNotifier {
     // Evaluate answer locally for guest users
     _userAnswer = answer;
     _isCorrect = answer == _question!.correctAnswer;
-    _resultMessage = _isCorrect! 
+    _resultMessage = _isCorrect!
         ? _getRandomMessage(AppConstants.correctMessages)
         : _getRandomMessage(AppConstants.wrongMessages);
-    
+
     // Save guest answer to local storage (legacy format for migration)
     final storageService = getIt<StorageService>();
     storageService.saveGuestAnswer(
@@ -334,7 +307,7 @@ class DailyQuestionViewModel extends ChangeNotifier {
       answer: answer,
       isCorrect: _isCorrect!,
     );
-    
+
     // Also save to daily question answer storage (new format)
     storageService.saveDailyQuestionAnswer(
       questionId: _question!.id,
@@ -345,7 +318,7 @@ class DailyQuestionViewModel extends ChangeNotifier {
       trueVotes: _question!.trueVotes,
       falseVotes: _question!.falseVotes,
     );
-    
+
     _calculateNextQuestionTime();
     notifyListeners();
   }
@@ -354,8 +327,7 @@ class DailyQuestionViewModel extends ChangeNotifier {
     final startUtc = DateTime.utc(2026, 4, 1, 0, 0, 0);
     final nowUtc = DateTime.now().toUtc();
 
-    final secondsPassed =
-        nowUtc.difference(startUtc).inSeconds;
+    final secondsPassed = nowUtc.difference(startUtc).inSeconds;
 
     final currentDay = secondsPassed ~/ 86400;
 
@@ -363,5 +335,4 @@ class DailyQuestionViewModel extends ChangeNotifier {
       Duration(seconds: (currentDay + 1) * 86400),
     );
   }
-
 }

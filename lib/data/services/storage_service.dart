@@ -178,17 +178,7 @@ class StorageService {
     }
 
     final answerData = jsonDecode(answerStr) as Map<String, dynamic>;
-    
-    // Check if answer is from today
-    final savedDate = answerData['date'] as String?;
-    final today = DateTime.now().toIso8601String().split('T')[0];
-    
-    if (savedDate != today) {
-      // Answer is from a previous day - clear it
-      clearDailyQuestionAnswer();
-      return null;
-    }
-    
+
     return answerData;
   }
 
