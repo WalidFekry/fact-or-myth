@@ -63,15 +63,21 @@ class ModernBottomNav extends StatelessWidget {
                 ),
                 _buildNavItem(
                   context,
+                  icon: Icons.emoji_events_rounded,
+                  label: 'تحدي',
+                  index: 2,
+                ),
+                _buildNavItem(
+                  context,
                   icon: Icons.leaderboard_rounded,
                   label: 'الترتيب',
-                  index: 2,
+                  index: 3,
                 ),
                 _buildNavItem(
                   context,
                   icon: Icons.person_rounded,
                   label: 'الملف',
-                  index: 3,
+                  index: 4,
                 ),
               ],
             ),

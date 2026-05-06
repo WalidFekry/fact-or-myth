@@ -10,7 +10,7 @@ class ProfileRepository {
 
   Future<ProfileModel> getProfile(int userId) async {
     final response = await _apiService.get('/profile', params: {
-      'user_id': userId.toString(),
+      'user_id': userId,
     });
     return ProfileModel.fromJson(response['data']);
   }
@@ -27,6 +27,13 @@ class ProfileRepository {
     });
     
     await _storageService.saveUser(userId, name, avatar);
+    return ProfileModel.fromJson(response['data']);
+  }
+
+  Future<ProfileModel> getUser(int userId) async {
+    final response = await _apiService.get('/get-user', params: {
+      'user_id': userId,
+    });
     return ProfileModel.fromJson(response['data']);
   }
 }

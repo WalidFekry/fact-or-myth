@@ -18,6 +18,7 @@ import '../../viewmodels/theme_viewmodel.dart';
 import '../../viewmodels/auth_viewmodel.dart';
 import '../../viewmodels/daily_question_viewmodel.dart';
 import '../../viewmodels/free_questions_viewmodel.dart';
+import '../../viewmodels/challenge_viewmodel.dart';
 import '../../viewmodels/leaderboard_viewmodel.dart';
 import '../../viewmodels/profile_viewmodel.dart';
 import '../../viewmodels/comment_viewmodel.dart';
@@ -101,6 +102,13 @@ Future<void> setupServiceLocator() async {
   getIt.registerFactory<FreeQuestionsViewModel>(
     () => FreeQuestionsViewModel(
       getIt<QuestionRepository>(),
+      getIt<NetworkService>(),
+    ),
+  );
+  getIt.registerFactory<ChallengeViewModel>(
+    () => ChallengeViewModel(
+      getIt<QuestionRepository>(),
+      getIt<ProfileRepository>(),
       getIt<NetworkService>(),
     ),
   );

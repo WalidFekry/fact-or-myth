@@ -21,14 +21,14 @@ class ProfileModel {
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) {
     return ProfileModel(
-      userId: int.parse(json['user_id'].toString()),
+      userId: int.tryParse(json['user_id']?.toString() ?? '0') ?? 0,
       name: json['name'] ?? '',
       avatar: json['avatar'] ?? '👨',
-      totalAnswers: int.parse(json['total_answers'].toString()),
-      correctAnswers: int.parse(json['correct_answers'].toString()),
-      wrongAnswers: int.parse(json['wrong_answers'].toString()),
-      accuracy: double.parse(json['accuracy'].toString()),
-      currentStreak: int.parse(json['current_streak'].toString()),
+      totalAnswers: int.tryParse(json['total_answers']?.toString() ?? '0') ?? 0,
+      correctAnswers: int.tryParse(json['correct_answers']?.toString() ?? '0') ?? 0,
+      wrongAnswers: int.tryParse(json['wrong_answers']?.toString() ?? '0') ?? 0,
+      accuracy: double.tryParse(json['accuracy']?.toString() ?? '0') ?? 0,
+      currentStreak: int.tryParse(json['current_streak']?.toString() ?? '0') ?? 0,
     );
   }
 
