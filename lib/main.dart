@@ -164,12 +164,8 @@ class _InitialScreenState extends State<InitialScreen> {
         );
       } else {
         // Normal flow - go to home
-        // Navigator.of(context).pushReplacement(
-        //   MaterialPageRoute(builder: (_) => const HomeScreen()),
-        // );
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => ChallengePlayScreen(questionId: 200, userId: 60)),
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const HomeScreen()),
         );
       }
     }
