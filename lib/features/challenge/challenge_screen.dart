@@ -141,6 +141,9 @@ class _ChallengeScreenBody extends StatelessWidget {
                       'اختر الفئة',
                       style: Theme.of(context).textTheme.displaySmall,
                     ),
+                    const Spacer(),
+                    // Refresh Button
+                    _buildRefreshButton(context, vm),
                   ],
                 ),
                 const SizedBox(height: 10),
@@ -181,6 +184,165 @@ class _ChallengeScreenBody extends StatelessWidget {
         );
       },
     );
+  }
+  
+  Widget _buildRefreshButton(BuildContext context, ChallengeViewModel vm) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: vm.isSyncing ? null : () => _showRefreshDialog(context, vm),
+        borderRadius: BorderRadius.circular(10),
+        child: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: isDark
+                ? AppColors.surfaceDark.withOpacity(0.5)
+                : AppColors.surfaceLight.withOpacity(0.8),
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: AppColors.primaryDark.withOpacity(0.2),
+              width: 1,
+            ),
+          ),
+          child: vm.isSyncing
+              ? const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.primaryDark),
+                  ),
+                )
+              : const Icon(
+                  Icons.refresh_rounded,
+                  color: AppColors.primaryDark,
+                  size: 20,
+                ),
+        ),
+      ),
+    );
+  }
+  
+  Future<void> _showRefreshDialog(BuildContext context, ChallengeViewModel vm) async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Theme.of(context).cardTheme.color,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: const Row(
+          children: [
+            Text('🔄', style: TextStyle(fontSize: 15)),
+            SizedBox(width: 8),
+            Text('تحديث الأسئلة'),
+          ],
+        ),
+        content: const Text(
+          'سيتم تحميل أحدث الأسئلة وحفظها على جهازك. قد يستغرق ذلك بضع ثوانٍ.',
+          style: TextStyle(height: 1.5),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('إلغاء'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primaryDark,
+              foregroundColor: AppColors.pureWhite,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: const Text('تحديث الآن'),
+          ),
+        ],
+      ),
+    );
+
+    if (result == true && context.mounted) {
+      await _performRefresh(context, vm);
+    }
+  }
+  
+  Future<void> _performRefresh(BuildContext context, ChallengeViewModel vm) async {
+    // Show loading dialog
+    if (context.mounted) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => WillPopScope(
+          onWillPop: () async => false,
+          child: AlertDialog(
+            backgroundColor: Theme.of(context).cardTheme.color,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.primaryDark),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'جاري تحديث الأسئلة...',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    // Perform sync
+    final success = await vm.syncQuestions();
+
+    // Close loading dialog
+    if (context.mounted) {
+      Navigator.pop(context);
+    }
+
+    // Show result
+    if (context.mounted) {
+      if (success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Row(
+              children: [
+                Icon(Icons.check_circle, color: AppColors.pureWhite),
+                SizedBox(width: 8),
+                Expanded(child: Text('تم تحديث الأسئلة بنجاح')),
+              ],
+            ),
+            backgroundColor: AppColors.success,
+            duration: Duration(seconds: 3),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Row(
+              children: [
+                Icon(Icons.error, color: AppColors.pureWhite),
+                SizedBox(width: 8),
+                Expanded(child: Text('حدث خطأ أثناء تحديث الأسئلة')),
+              ],
+            ),
+            backgroundColor: AppColors.error,
+            duration: Duration(seconds: 3),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    }
   }
 
   Widget _buildStartButton(BuildContext context) {
