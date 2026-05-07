@@ -1,11 +1,9 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/services.dart';
 import '../constants/app_constants.dart';
-import '../theme/app_colors.dart';
 
 class ShareUtils {
   static Future<void> shareResult({
@@ -66,6 +64,34 @@ class ShareUtils {
       ShareParams(
         text: shareText,
         subject: 'حقيقة ولا خرافة؟',
+      ),
+    );
+  }
+
+  // Share Challenge with Friend
+  static Future<void> shareChallenge({
+    required dynamic question,
+    required bool userAnswer,
+    int? userId,
+  }) async {
+    final questionText = question.question as String;
+    final questionId = question.id as int;
+
+    String shareText = 'أنا اتحديتك في سؤال! 😏\n\n';
+    shareText += 'هل دي حقيقة ولا خرافة؟ 🧠\n\n';
+    shareText += '$questionText\n\n';
+    shareText += 'جاوب وشوف مين فينا الصح 👇\n\n';
+    
+    // Deep link format
+    shareText += 'https://walid-fekry.com/fact-or-myth/ch/$questionId';
+    if(userId != null){
+      shareText += '/$userId';
+    }
+
+    await SharePlus.instance.share(
+      ShareParams(
+        text: shareText,
+        subject: 'تحدي: حقيقة ولا خرافة؟',
       ),
     );
   }

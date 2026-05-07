@@ -110,6 +110,7 @@ Future<void> setupServiceLocator() async {
       getIt<QuestionRepository>(),
       getIt<ProfileRepository>(),
       getIt<NetworkService>(),
+      getIt<AuthRepository>(),
     ),
   );
   getIt.registerFactory<LeaderboardViewModel>(
