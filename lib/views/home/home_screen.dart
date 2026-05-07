@@ -83,14 +83,22 @@ class _HomeScreenState extends State<HomeScreen> {
 
     final chIndex = segments.indexOf('ch');
 
-    if (chIndex != -1 && segments.length > chIndex + 2) {
+    if (chIndex != -1 && segments.length > chIndex + 1) {
       final questionId = int.tryParse(segments[chIndex + 1]);
-      final userId = int.tryParse(segments[chIndex + 2]);
+      final userId = (segments.length > chIndex + 2)
+          ? int.tryParse(segments[chIndex + 2])
+          : null;
+
       if (questionId != null) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => ChallengePlayScreen(questionId: questionId, userId: userId)),
+            MaterialPageRoute(
+              builder: (_) => ChallengePlayScreen(
+                questionId: questionId,
+                userId: userId,
+              ),
+            ),
           );
         });
       }
