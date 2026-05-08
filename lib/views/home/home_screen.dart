@@ -72,35 +72,55 @@ class _HomeScreenState extends State<HomeScreen> {
     if (_lastHandledUri?.toString() == uri.toString()) {
       return;
     }
+
     _lastHandledUri = uri;
 
     debugPrint('Received deep link: $uri');
+    debugPrint('Host: ${uri.host}');
+    debugPrint('Segments: ${uri.pathSegments}');
 
-    final segments = uri.pathSegments;
+    int? questionId;
+    int? userId;
 
-    if (segments.isEmpty) return;
+    // Custom scheme
+    // factormyth://ch/750/304
+    if (uri.scheme == 'factormyth' && uri.host == 'ch') {
+      if (uri.pathSegments.isNotEmpty) {
+        questionId = int.tryParse(uri.pathSegments[0]);
 
-    final chIndex = segments.indexOf('ch');
-
-    if (chIndex != -1 && segments.length > chIndex + 1) {
-      final questionId = int.tryParse(segments[chIndex + 1]);
-      final userId = (segments.length > chIndex + 2)
-          ? int.tryParse(segments[chIndex + 2])
-          : null;
-
-      if (questionId != null) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => ChallengePlayScreen(
-                questionId: questionId,
-                userId: userId,
-              ),
-            ),
-          );
-        });
+        if (uri.pathSegments.length > 1) {
+          userId = int.tryParse(uri.pathSegments[1]);
+        }
       }
+    }
+
+    // Https link
+    // https://post.walid-fekry.com/fact-or-myth/ch/750/304
+    else {
+      final segments = uri.pathSegments;
+      final chIndex = segments.indexOf('ch');
+
+      if (chIndex != -1 && segments.length > chIndex + 1) {
+        questionId = int.tryParse(segments[chIndex + 1]);
+
+        if (segments.length > chIndex + 2) {
+          userId = int.tryParse(segments[chIndex + 2]);
+        }
+      }
+    }
+
+    if (questionId != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ChallengePlayScreen(
+              questionId: questionId!,
+              userId: userId,
+            ),
+          ),
+        );
+      });
     }
   }
 

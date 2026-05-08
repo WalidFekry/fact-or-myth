@@ -22,22 +22,28 @@ class AccountInfoCard extends StatelessWidget {
   /// Get compact membership duration in Arabic
   String _getCompactMembershipDuration() {
     final days = _getDaysSinceCreation();
-    
+
     if (days == 0) {
-      return 'انضم اليوم';
+      return 'انضممت اليوم';
     } else if (days == 1) {
-      return 'منذ يوم';
+      return 'أنت معنا منذ يوم';
     } else if (days < 7) {
-      return 'منذ $days أيام';
+      return 'أنت معنا منذ $days أيام';
     } else if (days < 30) {
       final weeks = (days / 7).floor();
-      return weeks == 1 ? 'منذ أسبوع' : 'منذ $weeks أسابيع';
+      return weeks == 1
+          ? 'أنت معنا منذ أسبوع'
+          : 'أنت معنا منذ $weeks أسابيع';
     } else if (days < 365) {
       final months = (days / 30).floor();
-      return months == 1 ? 'منذ شهر' : 'منذ $months أشهر';
+      return months == 1
+          ? 'أنت معنا منذ شهر'
+          : 'أنت معنا منذ $months أشهر';
     } else {
       final years = (days / 365).floor();
-      return years == 1 ? 'منذ سنة' : 'منذ $years سنوات';
+      return years == 1
+          ? 'أنت معنا منذ سنة'
+          : 'أنت معنا منذ $years سنوات';
     }
   }
 
