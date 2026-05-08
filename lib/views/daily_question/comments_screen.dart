@@ -7,6 +7,7 @@ import '../../viewmodels/comment_viewmodel.dart';
 import '../../widgets/loading_widget.dart';
 import '../../widgets/error_widget.dart';
 import '../../widgets/custom_app_bar.dart';
+import '../../widgets/featured_comment_card.dart';
 
 class CommentsScreen extends StatefulWidget {
   final int questionId;
@@ -105,75 +106,10 @@ class _CommentsScreenState extends State<CommentsScreen> {
                                   itemCount: vm.comments.length,
                                   itemBuilder: (context, index) {
                                     final comment = vm.comments[index];
-                                    return Container(
-                                      margin: const EdgeInsets.only(bottom: 8),
-                                      padding: const EdgeInsets.all(12),
-                                      decoration: BoxDecoration(
-                                        color: Theme.of(context).colorScheme.surface,
-                                        borderRadius: BorderRadius.circular(12),
-                                        border: Border.all(
-                                          color: Theme.of(context).dividerColor.withOpacity(0.1),
-                                        ),
-                                      ),
-                                      child: Row(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          // Avatar
-                                          Container(
-                                            width: 36,
-                                            height: 36,
-                                            decoration: BoxDecoration(
-                                              color: AppColors.primaryDark.withOpacity(0.1),
-                                              shape: BoxShape.circle,
-                                            ),
-                                            child: Center(
-                                              child: Text(
-                                                comment.userAvatar,
-                                                style: const TextStyle(fontSize: 18),
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(width: 10),
-                                          // Content
-                                          Expanded(
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    Expanded(
-                                                      child: Text(
-                                                        comment.userName,
-                                                        style: const TextStyle(
-                                                          fontWeight: FontWeight.w600,
-                                                          fontSize: 14,
-                                                        ),
-                                                        maxLines: 1,
-                                                        overflow: TextOverflow.ellipsis,
-                                                      ),
-                                                    ),
-                                                    const SizedBox(width: 6),
-                                                    Text(
-                                                      comment.createdAt.toString(),
-                                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                            fontSize: 12,
-                                                          ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                const SizedBox(height: 6),
-                                                Text(
-                                                  comment.comment,
-                                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                                        fontSize: 14,
-                                                        height: 1.4,
-                                                      ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                    final isFeatured = index == vm.comments.length-1;
+                                    return FeaturedCommentCard(
+                                      comment: comment,
+                                      isFeatured: isFeatured,
                                     );
                                   },
                                 ),
