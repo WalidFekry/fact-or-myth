@@ -164,7 +164,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 5),
                   // Stats Grid (2x2)
                   Row(
                     children: [
@@ -189,7 +189,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 5),
                   Row(
                     children: [
                       Expanded(
@@ -213,7 +213,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 5),
                   // Notifications Settings Card
                   Card(
                     child: ListTile(
@@ -247,13 +247,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       trailing: _buildNotificationToggle(),
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 5),
                   // Advanced Streak Card
                   AdvancedStreakCard(streak: profile.currentStreak),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 5),
                   // Account Info Card
                   AccountInfoCard(createdAt: profile.createdAt),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 5),
                   // Account Actions Section
                   Card(
                     child: Column(

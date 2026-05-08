@@ -8,6 +8,7 @@ class AccountInfoCard extends StatelessWidget {
     required this.createdAt,
   });
 
+  /// Calculate days since account creation
   int _getDaysSinceCreation() {
     try {
       final createdDate = DateTime.parse(createdAt);
@@ -18,13 +19,29 @@ class AccountInfoCard extends StatelessWidget {
     }
   }
 
-  /// Get relative membership duration in Arabic
-  String _getMembershipDuration() {
+  /// Get compact membership duration in Arabic
+  String _getCompactMembershipDuration() {
     final days = _getDaysSinceCreation();
-    return days == 0 ? 'انضم حديثًا' : 'عضو منذ $days أيام';
+    
+    if (days == 0) {
+      return 'انضم اليوم';
+    } else if (days == 1) {
+      return 'منذ يوم';
+    } else if (days < 7) {
+      return 'منذ $days أيام';
+    } else if (days < 30) {
+      final weeks = (days / 7).floor();
+      return weeks == 1 ? 'منذ أسبوع' : 'منذ $weeks أسابيع';
+    } else if (days < 365) {
+      final months = (days / 30).floor();
+      return months == 1 ? 'منذ شهر' : 'منذ $months أشهر';
+    } else {
+      final years = (days / 365).floor();
+      return years == 1 ? 'منذ سنة' : 'منذ $years سنوات';
+    }
   }
 
-  /// Format creation date in Arabic-friendly format
+  /// Format creation date in compact format
   String _getFormattedDate() {
     try {
       final date = DateTime.parse(createdAt);
@@ -42,90 +59,85 @@ class AccountInfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isNew = _isNewUser();
-    final membershipText = _getMembershipDuration();
+    final membershipText = _getCompactMembershipDuration();
     final formattedDate = _getFormattedDate();
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Card(
       child: Container(
-        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          gradient: LinearGradient(
-            colors: [
-              (isNew ? AppColors.success : AppColors.primaryDark)
-                  .withOpacity(isDark ? 0.1 : 0.05),
-              (isNew ? AppColors.success : AppColors.secondaryDark)
-                  .withOpacity(isDark ? 0.08 : 0.03),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+          gradient: isNew
+              ? LinearGradient(
+                  colors: [
+                    AppColors.success.withOpacity(isDark ? 0.06 : 0.04),
+                    AppColors.success.withOpacity(isDark ? 0.04 : 0.02),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                )
+              : null,
+        ),
+        child: ListTile(
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 4,
+          ),
+          // Icon
+          leading: Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: (isNew ? AppColors.success : AppColors.primaryDark)
+                  .withOpacity(0.1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(
+              isNew ? Icons.celebration_rounded : Icons.calendar_today_rounded,
+              color: isNew ? AppColors.success : AppColors.primaryDark,
+              size: 20,
+            ),
+          ),
+          // Title and subtitle
+          title: Text(
+          membershipText,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            fontWeight: FontWeight.w600,
+            fontSize: 14,
           ),
         ),
-        child: Row(
-          children: [
-            // Icon Container
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                color: (isNew ? AppColors.success : AppColors.primaryDark)
-                    .withOpacity(0.1),
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: (isNew ? AppColors.success : AppColors.primaryDark)
-                      .withOpacity(0.3),
-                  width: 2,
-                ),
-              ),
-              child: Icon(
-                isNew ? Icons.celebration_rounded : Icons.calendar_today_rounded,
-                color: isNew ? AppColors.success : AppColors.primaryDark,
-                size: 24,
-              ),
-            ),
-            const SizedBox(width: 12),
-            // Content
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          membershipText,
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                              ),
-                        ),
-                      ),
-                    ],
+          subtitle: Padding(
+            padding: const EdgeInsets.only(top: 2),
+            child: Text(
+              isNew ? 'شكراً لانضمامك معنا' : 'عضو في المجتمع',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    fontSize: 11,
+                    color: isNew ? AppColors.success : null,
                   ),
-                  const SizedBox(height: 4),
-                  if (formattedDate.isNotEmpty)
-                    Text(
-                      'تم إنشاء الحساب في $formattedDate',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            fontSize: 12,
-                          ),
-                    ),
-                  if (isNew) ...[
-                    const SizedBox(height: 4),
-                    Text(
-                      'شكراً لانضمامك معنا',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            fontSize: 11,
-                            color: AppColors.success,
-                            fontWeight: FontWeight.w600,
-                          ),
-                    ),
-                  ],
-                ],
+            ),
+          ),
+          // Trailing: Compact date badge
+          trailing: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: (isNew ? AppColors.success : AppColors.primaryDark)
+                  .withOpacity(0.1),
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(
+                color: (isNew ? AppColors.success : AppColors.primaryDark)
+                    .withOpacity(0.2),
+                width: 1,
               ),
             ),
-          ],
+            child: Text(
+              formattedDate,
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w600,
+                color: isNew ? AppColors.success : AppColors.primaryDark,
+              ),
+            ),
+          ),
         ),
       ),
     );

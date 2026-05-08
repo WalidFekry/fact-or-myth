@@ -7,6 +7,7 @@ class ProfileModel {
   final int wrongAnswers;
   final double accuracy;
   final int currentStreak;
+  final String createdAt;
 
   ProfileModel({
     required this.userId,
@@ -17,6 +18,7 @@ class ProfileModel {
     required this.wrongAnswers,
     required this.accuracy,
     required this.currentStreak,
+    required this.createdAt,
   });
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) {
@@ -29,6 +31,7 @@ class ProfileModel {
       wrongAnswers: int.tryParse(json['wrong_answers']?.toString() ?? '0') ?? 0,
       accuracy: double.tryParse(json['accuracy']?.toString() ?? '0') ?? 0,
       currentStreak: int.tryParse(json['current_streak']?.toString() ?? '0') ?? 0,
+      createdAt: json['created_at'] ?? '',
     );
   }
 
