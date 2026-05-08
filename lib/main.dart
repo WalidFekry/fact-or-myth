@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:app_links/app_links.dart';
-import 'package:fact_or_myth/features/challenge/challenge_play_screen.dart';
 import 'package:fact_or_myth/viewmodels/auth_viewmodel.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';

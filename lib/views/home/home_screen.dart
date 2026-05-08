@@ -3,12 +3,11 @@ import 'dart:async';
 import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../../features/challenge/challenge_play_screen.dart';
-import '../../features/challenge/challenge_screen.dart';
 import '../../viewmodels/auth_viewmodel.dart';
 import '../../widgets/modern_bottom_nav.dart';
 import '../../widgets/register_dialog.dart';
+import '../challenge/challenge_play_screen.dart';
+import '../challenge/challenge_screen.dart';
 import '../daily_question/daily_question_screen.dart';
 import '../free_questions/free_questions_screen.dart';
 import '../leaderboard/leaderboard_screen.dart';

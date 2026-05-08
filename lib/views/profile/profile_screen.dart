@@ -12,6 +12,8 @@ import '../../data/services/storage_service.dart';
 import '../../widgets/loading_widget.dart';
 import '../../widgets/error_widget.dart';
 import '../../widgets/custom_app_bar.dart';
+import '../../widgets/advanced_streak_card.dart';
+import '../../widgets/account_info_card.dart';
 import '../onboarding/onboarding_screen.dart';
 import 'edit_profile_screen.dart';
 
@@ -246,57 +248,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  // Streak Card
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 48,
-                            height: 48,
-                            decoration: BoxDecoration(
-                              color: AppColors.warning.withOpacity(0.1),
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Center(
-                              child: Text(
-                                '🔥',
-                                style: TextStyle(fontSize: 24),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'سلسلة الأيام',
-                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                ),
-                                const SizedBox(height: 2),
-                                Text(
-                                  '${profile.currentStreak} يوم متتالي',
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                ),
-                              ],
-                            ),
-                          ),
-                          Text(
-                            '${profile.currentStreak}',
-                            style: const TextStyle(
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.warning,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  // Advanced Streak Card
+                  AdvancedStreakCard(streak: profile.currentStreak),
+                  const SizedBox(height: 10),
+                  // Account Info Card
+                  AccountInfoCard(createdAt: profile.createdAt),
                   const SizedBox(height: 10),
                   // Account Actions Section
                   Card(
