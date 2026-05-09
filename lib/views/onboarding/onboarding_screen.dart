@@ -28,6 +28,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       description: 'ادخل الترتيب وحقق أعلى النتائج',
     ),
     OnboardingSlide(
+      emoji: '⚔️',
+      title: 'تحدى أصدقاءك',
+      description: 'شارك الأسئلة واكتشف مين الأذكى',
+    ),
+    OnboardingSlide(
       emoji: '⚡',
       title: 'سريع وبسيط',
       description: 'جاوب في ثواني بدون تعقيد',
