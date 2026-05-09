@@ -152,7 +152,7 @@ class ChallengeViewModel extends ChangeNotifier {
         return;
       }
       // Get user profile
-      if (userId != null) {
+      if (isConnected && userId != null) {
         _profile = await _profileRepository.getUser(userId);
       }
       // Get all questions and find the one with matching ID
