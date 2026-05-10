@@ -8,6 +8,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/utils/share_utils.dart';
 import '../../data/services/sound_service.dart';
 import '../../data/services/storage_service.dart';
+import '../../data/services/ad_service.dart';
 import '../../viewmodels/auth_viewmodel.dart';
 import '../../viewmodels/daily_question_viewmodel.dart';
 import '../../viewmodels/theme_viewmodel.dart';
@@ -655,6 +656,10 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
                     icon: Icons.content_copy_rounded,
                     label: 'نسخ',
                     onTap: () {
+                      // Show interstitial ad before copying
+                      final adService = getIt<AdService>();
+                      adService.showInterstitialAd();
+                      
                       ShareUtils.copyQuestionContent(
                           questionText: vm.question!.question,
                           correctAnswer: vm.question!.correctAnswer,

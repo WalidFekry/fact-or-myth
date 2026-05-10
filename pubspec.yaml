@@ -50,7 +50,9 @@ dependencies:
   
   # App Tracking Transparency (iOS)
   app_tracking_transparency: ^2.0.6+1
-
+  
+  # AdMob
+  google_mobile_ads: ^8.0.0
 
 dev_dependencies:
   flutter_test:

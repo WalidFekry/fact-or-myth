@@ -7,6 +7,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/utils/share_utils.dart';
 import '../../data/services/sound_service.dart';
 import '../../data/services/storage_service.dart';
+import '../../data/services/ad_service.dart';
 import '../../viewmodels/free_questions_viewmodel.dart';
 import '../../widgets/answer_button.dart';
 import '../../widgets/custom_app_bar.dart';
@@ -409,6 +410,7 @@ class _FreeQuestionsScreenState extends State<FreeQuestionsScreen> {
 
   Widget _buildAnswerButtons(FreeQuestionsViewModel vm) {
     final soundService = getIt<SoundService>();
+    final adService = getIt<AdService>();
 
     return Column(
       children: [
@@ -416,6 +418,9 @@ class _FreeQuestionsScreenState extends State<FreeQuestionsScreen> {
           text: 'حقيقة ✓',
           isTrue: true,
           onPressed: () {
+            // Show interstitial ad before submitting answer
+            adService.showInterstitialAd();
+            
             vm.submitAnswer(true);
             // Play sound after answer
             if (vm.isCorrect != null) {
@@ -432,6 +437,9 @@ class _FreeQuestionsScreenState extends State<FreeQuestionsScreen> {
           text: 'خرافة ✗',
           isTrue: false,
           onPressed: () {
+            // Show interstitial ad before submitting answer
+            adService.showInterstitialAd();
+            
             vm.submitAnswer(false);
             // Play sound after answer
             if (vm.isCorrect != null) {

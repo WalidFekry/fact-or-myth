@@ -1,24 +1,27 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:fact_or_myth/viewmodels/auth_viewmodel.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'core/constants/app_constants.dart';
 import 'core/di/service_locator.dart';
 import 'core/theme/app_theme.dart';
+import 'data/services/ad_service.dart';
 import 'data/services/notification_service.dart';
 import 'data/services/storage_service.dart';
 import 'firebase_options.dart';
 import 'viewmodels/theme_viewmodel.dart';
-import 'views/onboarding/onboarding_screen.dart';
 import 'views/home/home_screen.dart';
 import 'views/notification_permission/notification_permission_screen.dart';
+import 'views/onboarding/onboarding_screen.dart';
 import 'views/tracking_permission/tracking_permission_screen.dart';
 
 // Background message handler (must be top-level)
@@ -42,8 +45,9 @@ void main() async {
     // Only enable Crashlytics in release mode
     if (kReleaseMode) {
       // Pass all uncaught Flutter errors to Crashlytics
-      FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
-      
+      FlutterError.onError =
+          FirebaseCrashlytics.instance.recordFlutterFatalError;
+
       // Pass all uncaught asynchronous errors to Crashlytics
       PlatformDispatcher.instance.onError = (error, stack) {
         FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
@@ -66,16 +70,20 @@ void main() async {
     // Setup dependency injection
     await setupServiceLocator();
 
+    // Initialize AdService
+    final adService = getIt<AdService>();
+    await adService.initialize();
+
     // Initialize notification service
     final notificationService = getIt<NotificationService>();
     await notificationService.initialize();
-    
+
     // Set preferred orientations
     await SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    
+
     runApp(const MyApp());
   }, (error, stack) {
     // Catch errors that occur outside of Flutter framework
@@ -92,6 +100,7 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -139,11 +148,12 @@ class _InitialScreenState extends State<InitialScreen> {
   Future<void> _checkFirstTime() async {
     final prefs = await SharedPreferences.getInstance();
     final storageService = getIt<StorageService>();
-    
+
     final isFirstTime = prefs.getBool(AppConstants.keyIsFirstTime) ?? true;
-    final notificationPermissionShown = prefs.getBool(AppConstants.keyNotificationPermissionShown) ?? false;
+    final notificationPermissionShown =
+        prefs.getBool(AppConstants.keyNotificationPermissionShown) ?? false;
     final trackingPermissionShown = storageService.isTrackingPermissionShown();
-    
+
     if (mounted) {
       if (isFirstTime) {
         // First time - show onboarding
@@ -153,7 +163,8 @@ class _InitialScreenState extends State<InitialScreen> {
       } else if (!notificationPermissionShown) {
         // Not first time but notification permission not shown yet
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const NotificationPermissionScreen()),
+          MaterialPageRoute(
+              builder: (_) => const NotificationPermissionScreen()),
         );
       } else if (Platform.isIOS && !trackingPermissionShown) {
         // iOS only: Show tracking permission if not shown yet

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../core/constants/app_constants.dart';
 import '../../core/di/service_locator.dart';
 import '../../core/theme/app_colors.dart';
+import '../../data/services/ad_service.dart';
 import '../../viewmodels/challenge_viewmodel.dart';
 import '../../widgets/custom_app_bar.dart';
 import '../../widgets/error_widget.dart';
@@ -369,8 +370,10 @@ class _ChallengeScreenBody extends StatelessWidget {
 
   Future<void> _startChallenge(
       BuildContext context, ChallengeViewModel vm) async {
+    // Show interstitial ad before starting challenge
+    final adService = getIt<AdService>();
+    adService.showInterstitialAd();
     await vm.loadChallengeQuestion();
-
     if (vm.question != null && context.mounted) {
       Navigator.push(
         context,

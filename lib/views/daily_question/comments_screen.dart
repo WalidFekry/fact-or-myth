@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../core/di/service_locator.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/utils/time_utils.dart';
+import '../../data/services/ad_service.dart';
 import '../../viewmodels/comment_viewmodel.dart';
 import '../../widgets/loading_widget.dart';
 import '../../widgets/error_widget.dart';
@@ -50,6 +51,10 @@ class _CommentsScreenState extends State<CommentsScreen> {
     if (success) {
       _commentController.clear();
       FocusScope.of(context).unfocus();
+      
+      // Show interstitial ad after successful comment submission
+      final adService = getIt<AdService>();
+      adService.showInterstitialAd();
     }
   }
 
