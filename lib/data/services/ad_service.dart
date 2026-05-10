@@ -174,8 +174,6 @@ class AdService {
           if (kDebugMode) {
             print('❌ Interstitial ad failed to load: $error');
           }
-          // Retry after delay
-          Future.delayed(const Duration(seconds: 30), _preloadInterstitial);
         },
       ),
     );
