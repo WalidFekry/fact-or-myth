@@ -48,6 +48,10 @@
                 android:name="io.flutter.embedding.android.NormalTheme"
                 android:resource="@style/NormalTheme" />
         </activity>
+        <!-- AdMob App ID -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3354189036871191~6988638268"/>
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
