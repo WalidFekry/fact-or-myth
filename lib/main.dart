@@ -24,6 +24,9 @@ import 'views/notification_permission/notification_permission_screen.dart';
 import 'views/onboarding/onboarding_screen.dart';
 import 'views/tracking_permission/tracking_permission_screen.dart';
 
+// Global navigator key for navigation from services
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 // Background message handler (must be top-level)
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -68,7 +71,7 @@ void main() async {
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
     // Setup dependency injection
-    await setupServiceLocator();
+    await setupServiceLocator(navigatorKey: navigatorKey);
 
     // Initialize AdService
     final adService = getIt<AdService>();
@@ -113,6 +116,7 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             title: 'حقيقة ولا خرافة؟',
             debugShowCheckedModeBanner: false,
+            navigatorKey: navigatorKey,
             theme: AppTheme.lightTheme,
             darkTheme: AppTheme.darkTheme,
             themeMode: themeVM.themeMode,
@@ -138,7 +142,7 @@ class InitialScreen extends StatefulWidget {
   State<InitialScreen> createState() => _InitialScreenState();
 }
 
-class _InitialScreenState extends State<InitialScreen> {
+class _InitialScreenState extends State<InitialScreen> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
@@ -155,28 +159,33 @@ class _InitialScreenState extends State<InitialScreen> {
     final trackingPermissionShown = storageService.isTrackingPermissionShown();
 
     if (mounted) {
+      Widget targetScreen;
+      
       if (isFirstTime) {
         // First time - show onboarding
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const OnboardingScreen()),
-        );
+        targetScreen = const OnboardingScreen();
       } else if (!notificationPermissionShown) {
         // Not first time but notification permission not shown yet
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-              builder: (_) => const NotificationPermissionScreen()),
-        );
+        targetScreen = const NotificationPermissionScreen();
       } else if (Platform.isIOS && !trackingPermissionShown) {
         // iOS only: Show tracking permission if not shown yet
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const TrackingPermissionScreen()),
-        );
+        targetScreen = const TrackingPermissionScreen();
       } else {
         // Normal flow - go to home
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const HomeScreen()),
-        );
+        targetScreen = const HomeScreen();
+        
+        // Mark app as ready for notification navigation
+        final notificationService = getIt<NotificationService>();
+        notificationService.markAppReady();
+        
+        if (kDebugMode) {
+          print('✅ App initialization complete, ready for notifications');
+        }
       }
+      
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => targetScreen),
+      );
     }
   }
 

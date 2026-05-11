@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import '../../core/network/api_client.dart';
 import '../../data/services/api_service.dart';
 import '../../data/services/storage_service.dart';
@@ -27,7 +28,7 @@ import '../../viewmodels/report_viewmodel.dart';
 
 final getIt = GetIt.instance;
 
-Future<void> setupServiceLocator() async {
+Future<void> setupServiceLocator({GlobalKey<NavigatorState>? navigatorKey}) async {
   // External
   final sharedPreferences = await SharedPreferences.getInstance();
   getIt.registerSingleton<SharedPreferences>(sharedPreferences);
@@ -64,6 +65,7 @@ Future<void> setupServiceLocator() async {
       getIt<FirebaseMessaging>(),
       getIt<StorageService>(),
       getIt<ApiService>(),
+      navigatorKey: navigatorKey,
     ),
   );
   
