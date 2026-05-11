@@ -4,6 +4,8 @@ import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/di/service_locator.dart';
+import '../../data/services/notification_service.dart';
 import '../../viewmodels/auth_viewmodel.dart';
 import '../../widgets/modern_bottom_nav.dart';
 import '../../widgets/register_dialog.dart';
@@ -15,14 +17,16 @@ import '../leaderboard/leaderboard_screen.dart';
 import '../profile/profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final int initialIndex;
+  
+  const HomeScreen({super.key, this.initialIndex = 0});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _currentIndex = 0;
+  late int _currentIndex;
   late AppLinks _appLinks;
   StreamSubscription<Uri>? _linkSubscription;
   Uri? _lastHandledUri;
@@ -38,6 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    _currentIndex = widget.initialIndex;
     _initDeepLinks();
   }
 
