@@ -28,7 +28,6 @@ class _NotificationPermissionScreenState extends State<NotificationPermissionScr
 
       // Request permission
       final granted = await notificationService.requestPermission();
-
       if (granted) {
         // Subscribe to topics
         await notificationService.subscribeToTopics();
@@ -44,6 +43,9 @@ class _NotificationPermissionScreenState extends State<NotificationPermissionScr
               MaterialPageRoute(builder: (_) => const TrackingPermissionScreen()),
             );
           } else {
+            // Mark app as ready for notification navigation
+            notificationService.markAppReady();
+
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (_) => const HomeScreen()),
             );
@@ -68,6 +70,9 @@ class _NotificationPermissionScreenState extends State<NotificationPermissionScr
               MaterialPageRoute(builder: (_) => const TrackingPermissionScreen()),
             );
           } else {
+            // Mark app as ready for notification navigation
+            notificationService.markAppReady();
+
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (_) => const HomeScreen()),
             );
@@ -106,6 +111,10 @@ class _NotificationPermissionScreenState extends State<NotificationPermissionScr
           MaterialPageRoute(builder: (_) => const TrackingPermissionScreen()),
         );
       } else {
+        // Mark app as ready for notification navigation
+        final notificationService = getIt<NotificationService>();
+        notificationService.markAppReady();
+
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (_) => const HomeScreen()),
         );

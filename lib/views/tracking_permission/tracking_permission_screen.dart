@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/di/service_locator.dart';
+import '../../data/services/notification_service.dart';
 import '../../data/services/storage_service.dart';
 import '../home/home_screen.dart';
 
@@ -59,7 +60,7 @@ class _TrackingPermissionScreenState extends State<TrackingPermissionScreen>
     setState(() {
       _isLoading = true;
     });
-
+    final notificationService = getIt<NotificationService>();
     try {
       // Only request tracking on iOS
       if (Platform.isIOS) {
@@ -76,6 +77,9 @@ class _TrackingPermissionScreenState extends State<TrackingPermissionScreen>
       await storageService.setTrackingPermissionShown(true);
 
       if (mounted) {
+        // Mark app as ready for notification navigation
+        notificationService.markAppReady();
+
         // Navigate to home
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (_) => const HomeScreen()),
@@ -83,6 +87,9 @@ class _TrackingPermissionScreenState extends State<TrackingPermissionScreen>
       }
     } catch (e) {
       if (mounted) {
+        // Mark app as ready for notification navigation
+        notificationService.markAppReady();
+
         // Even if there's an error, continue to home
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (_) => const HomeScreen()),
