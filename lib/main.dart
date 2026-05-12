@@ -73,13 +73,13 @@ void main() async {
     // Setup dependency injection
     await setupServiceLocator(navigatorKey: navigatorKey);
 
-    // Initialize AdService
+    // Initialize AdService, NotificationService
     final adService = getIt<AdService>();
-    await adService.initialize();
-
-    // Initialize notification service
     final notificationService = getIt<NotificationService>();
-    await notificationService.initialize();
+    await Future.wait([
+      adService.initialize(),
+      notificationService.initialize(),
+    ]);
 
     // Set preferred orientations
     await SystemChrome.setPreferredOrientations([
