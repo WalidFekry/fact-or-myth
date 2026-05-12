@@ -50,7 +50,13 @@
   - Podium for top 3
   - Personal rank tracking
   - Minimum 5 answers to qualify
-
+ 
+- **⚔️ Friends Challenge**
+  - Challenge friends with custom question links
+  - Smart deep linking support
+  - Personalized challenge pages
+  - Share challenge results instantly
+   
 - **👤 Profile Management**
   - User statistics (total, correct, wrong answers)
   - Accuracy percentage
