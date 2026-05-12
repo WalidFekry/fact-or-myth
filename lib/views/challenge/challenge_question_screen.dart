@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/constants/app_constants.dart';
 import '../../core/di/service_locator.dart';
 import '../../core/theme/app_colors.dart';
 import '../../data/services/sound_service.dart';
+import '../../data/services/storage_service.dart';
 import '../../viewmodels/challenge_viewmodel.dart';
 import '../../widgets/answer_button.dart';
 import '../../widgets/custom_app_bar.dart';
@@ -11,8 +13,28 @@ import '../../widgets/fake_live_counter.dart';
 import '../../widgets/loading_widget.dart';
 import '../../widgets/modern_action_button.dart';
 
-class ChallengeQuestionScreen extends StatelessWidget {
+class ChallengeQuestionScreen extends StatefulWidget {
   const ChallengeQuestionScreen({super.key});
+
+  @override
+  State<ChallengeQuestionScreen> createState() => _ChallengeQuestionScreenState();
+}
+
+class _ChallengeQuestionScreenState extends State<ChallengeQuestionScreen> {
+  double _explanationFontSize = AppConstants.defaultExplanationFontSize;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFontSize();
+  }
+
+  Future<void> _loadFontSize() async {
+    final storageService = getIt<StorageService>();
+    setState(() {
+      _explanationFontSize = storageService.getExplanationFontSize();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -307,7 +329,7 @@ class ChallengeQuestionScreen extends StatelessWidget {
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
                     color: AppColors.primaryDark.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
@@ -315,13 +337,15 @@ class ChallengeQuestionScreen extends StatelessWidget {
                   child: const Icon(
                     Icons.lightbulb_rounded,
                     color: AppColors.primaryDark,
-                    size: 20,
+                    size: 18,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 10),
                 Text(
                   'التفسير',
-                  style: Theme.of(context).textTheme.displaySmall,
+                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                        fontSize: 16,
+                      ),
                 ),
               ],
             ),
@@ -329,7 +353,8 @@ class ChallengeQuestionScreen extends StatelessWidget {
             Text(
               vm.question!.explanation,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    height: 1.6,
+                    height: 1.5,
+                    fontSize: _explanationFontSize,
                   ),
             ),
           ],

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/constants/app_constants.dart';
 import '../../core/di/service_locator.dart';
 import '../../core/theme/app_colors.dart';
 import '../../data/services/sound_service.dart';
+import '../../data/services/storage_service.dart';
 import '../../viewmodels/challenge_viewmodel.dart';
 import '../../widgets/answer_button.dart';
 import '../../widgets/custom_app_bar.dart';
@@ -13,7 +15,7 @@ import '../../widgets/loading_widget.dart';
 import '../../widgets/modern_action_button.dart';
 
 /// Screen for playing a challenge received via deep link
-class ChallengePlayScreen extends StatelessWidget {
+class ChallengePlayScreen extends StatefulWidget {
   final int questionId;
   final int? userId;
 
@@ -24,10 +26,30 @@ class ChallengePlayScreen extends StatelessWidget {
   });
 
   @override
+  State<ChallengePlayScreen> createState() => _ChallengePlayScreenState();
+}
+
+class _ChallengePlayScreenState extends State<ChallengePlayScreen> {
+  double _explanationFontSize = AppConstants.defaultExplanationFontSize;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFontSize();
+  }
+
+  Future<void> _loadFontSize() async {
+    final storageService = getIt<StorageService>();
+    setState(() {
+      _explanationFontSize = storageService.getExplanationFontSize();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => getIt<ChallengeViewModel>()
-        ..loadQuestionAndUserNameById(questionId, userId),
+        ..loadQuestionAndUserNameById(widget.questionId, widget.userId),
       child: Scaffold(
         appBar: const CustomAppBar(
           title: 'تم تحديك!',
@@ -46,7 +68,7 @@ class ChallengePlayScreen extends StatelessWidget {
                 return ErrorDisplayWidget(
                   message: vm.error!,
                   onRetry: () =>
-                      vm.loadQuestionAndUserNameById(questionId, userId),
+                      vm.loadQuestionAndUserNameById(widget.questionId, widget.userId),
                 );
               }
               if (vm.question == null) {
@@ -345,7 +367,7 @@ class ChallengePlayScreen extends StatelessWidget {
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
                     color: AppColors.primaryDark.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
@@ -353,13 +375,15 @@ class ChallengePlayScreen extends StatelessWidget {
                   child: const Icon(
                     Icons.lightbulb_rounded,
                     color: AppColors.primaryDark,
-                    size: 20,
+                    size: 18,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 10),
                 Text(
                   'التفسير',
-                  style: Theme.of(context).textTheme.displaySmall,
+                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                        fontSize: 16,
+                      ),
                 ),
               ],
             ),
@@ -367,7 +391,8 @@ class ChallengePlayScreen extends StatelessWidget {
             Text(
               vm.question!.explanation,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    height: 1.6,
+                    height: 1.5,
+                    fontSize: _explanationFontSize,
                   ),
             ),
           ],
