@@ -10,7 +10,7 @@
 [![Firebase](https://img.shields.io/badge/Firebase-Enabled-FFCA28?logo=firebase)](https://firebase.google.com)
 [![License](https://img.shields.io/badge/License-Proprietary-red.svg)](LICENSE)
 
-[Features](#-features) • [Screenshots](#-screenshots) • [Tech Stack](#-tech-stack) • [Setup](#-setup) • [Architecture](#-architecture)
+[Features](#-features) • [Screenshots](#-screenshots) • [Tech Stack](#-tech-stack) • [Setup](#-setup)
 
 </div>
 
@@ -50,7 +50,13 @@
   - Podium for top 3
   - Personal rank tracking
   - Minimum 5 answers to qualify
-
+ 
+- **⚔️ Friends Challenge**
+  - Challenge friends with custom question links
+  - Smart deep linking support
+  - Personalized challenge pages
+  - Share challenge results instantly
+   
 - **👤 Profile Management**
   - User statistics (total, correct, wrong answers)
   - Accuracy percentage
