@@ -111,7 +111,7 @@ class AboutScreen extends StatelessWidget {
                 ),
                 const SizedBox(width: 6),
                 Text(
-                  'الإصدار 1.0.0',
+                  'الإصدار 2.0.0',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         fontWeight: FontWeight.w600,
                         color: AppColors.primaryDark,

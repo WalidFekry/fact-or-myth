@@ -16,70 +16,75 @@ class ModernBottomNav extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     
-    return Container(
-      margin: const EdgeInsets.all(12),
-      height: 60,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(
-            color: AppColors.overlayLight,
-            blurRadius: 10,
-            offset: Offset(0, 4),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Container(
-            decoration: BoxDecoration(
-              color: isDark
-                  ? AppColors.cardDark.withOpacity(0.95)
-                  : AppColors.cardLight.withOpacity(0.95),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: isDark
-                    ? AppColors.dividerDark
-                    : AppColors.dividerLight,
-                width: 1,
-              ),
+    return SafeArea(
+      top: false,
+      left: false,
+      right: false,
+      child: Container(
+        margin: const EdgeInsets.all(12),
+        height: 60,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: const [
+            BoxShadow(
+              color: AppColors.overlayLight,
+              blurRadius: 10,
+              offset: Offset(0, 4),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildNavItem(
-                  context,
-                  icon: Icons.home_rounded,
-                  label: 'الرئيسية',
-                  index: 0,
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+            child: Container(
+              decoration: BoxDecoration(
+                color: isDark
+                    ? AppColors.cardDark.withOpacity(0.95)
+                    : AppColors.cardLight.withOpacity(0.95),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: isDark
+                      ? AppColors.dividerDark
+                      : AppColors.dividerLight,
+                  width: 1,
                 ),
-                _buildNavItem(
-                  context,
-                  icon: Icons.quiz_rounded,
-                  label: 'أسئلة',
-                  index: 1,
-                ),
-                _buildNavItem(
-                  context,
-                  icon: Icons.emoji_events_rounded,
-                  label: 'تحدي',
-                  index: 2,
-                ),
-                _buildNavItem(
-                  context,
-                  icon: Icons.leaderboard_rounded,
-                  label: 'الترتيب',
-                  index: 3,
-                ),
-                _buildNavItem(
-                  context,
-                  icon: Icons.person_rounded,
-                  label: 'الملف',
-                  index: 4,
-                ),
-              ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildNavItem(
+                    context,
+                    icon: Icons.home_rounded,
+                    label: 'الرئيسية',
+                    index: 0,
+                  ),
+                  _buildNavItem(
+                    context,
+                    icon: Icons.quiz_rounded,
+                    label: 'أسئلة',
+                    index: 1,
+                  ),
+                  _buildNavItem(
+                    context,
+                    icon: Icons.emoji_events_rounded,
+                    label: 'تحدي',
+                    index: 2,
+                  ),
+                  _buildNavItem(
+                    context,
+                    icon: Icons.leaderboard_rounded,
+                    label: 'الترتيب',
+                    index: 3,
+                  ),
+                  _buildNavItem(
+                    context,
+                    icon: Icons.person_rounded,
+                    label: 'الملف',
+                    index: 4,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
